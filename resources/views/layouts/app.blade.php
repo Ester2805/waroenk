@@ -52,9 +52,22 @@
         <a href="{{ url('/') }}" class="brand">
             <img src="{{ asset('images/logo.png') }}" alt="Waroenk Logo">
         </a>
+
         <div class="d-flex">
-            <a href="{{ url('/login') }}" class="btn-login">Login</a>
-            <a href="{{ url('/register') }}" class="btn-signup">Sign Up</a>
+            {{-- Kalau user belum login, tampilkan Login & Sign Up --}}
+            @guest
+                <a href="{{ route('login') }}" class="btn-login">Login</a>
+                <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
+            @endguest
+
+            {{-- Kalau user sudah login, tampilkan nama + tombol logout --}}
+            @auth
+                <span class="me-3">Halo, {{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn-signup">Logout</button>
+                </form>
+            @endauth
         </div>
     </nav>
 
