@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\CartController;
+
 
 // cart
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
