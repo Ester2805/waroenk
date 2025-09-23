@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,4 +22,11 @@ class Product extends Model
         'price',
         'image_path',
     ];
+=======
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    //
+>>>>>>> bf98960 (punya ester)
 }
