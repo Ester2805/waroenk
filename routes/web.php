@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Auth;
 
 // Register
@@ -11,7 +13,7 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 
 // Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/login', [LogixZnController::class, 'login'])->name('login.post');
 
 // Logout
 Route::post('/logout', function () {
@@ -28,3 +30,7 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 })->middleware('auth')->name('home');
+
+
+
+Route::get('/keranjang', [CartController::class, 'index']);
