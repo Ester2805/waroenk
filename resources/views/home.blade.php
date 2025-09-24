@@ -97,10 +97,17 @@
     {{-- Header --}}
     <div class="header-bar">
         <img src="{{ asset('images/logo.png') }}" alt="Logo">
-        <div class="search-box">
-            <input type="text" placeholder="Cari produk">
-            <button><i class="fa fa-search"></i></button>
-        </div>
+        <form action="/search" class="w-100 mx-2 max-w-5xl">
+            <div class="input-group">
+                <input id="search-bar" type="text" placeholder="Cari produk disini..." name="q"
+                    class="form-control rounded-pill pe-5 shadow-sm" required aria-label="Cari produk">
+                <button type="submit" class="btn position-absolute end-0 top-50 translate-middle-y me-1" aria-label="Cari">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="bi bi-search" style="width: 20px; height: 20px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                </button>
+            </div>
+        </form>
     </div>
 
     {{-- Banner --}}
