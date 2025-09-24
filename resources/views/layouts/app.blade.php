@@ -14,14 +14,11 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Tambahkan padding-top untuk memberi ruang bagi navbar yang fixed */
-            /* Sesuaikan nilai 90px jika tinggi navbar Anda berbeda */
-            padding-top: 90px;
+            padding-top: 90px; /* ruang untuk navbar fixed */
         }
         .navbar-waroenk {
             background-color: #f9fafb;
             padding: 1rem 2rem;
-            /* Tambahkan box-shadow untuk memberikan efek terangkat */
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .navbar-waroenk .brand {
@@ -58,30 +55,42 @@
     </style>
 </head>
 <body>
-    {{-- Tambahkan class 'fixed-top' dari Bootstrap di sini --}}
+    {{-- Navbar --}}
     <nav class="navbar-waroenk d-flex justify-content-between align-items-center fixed-top">
+        {{-- Logo --}}
         <a href="{{ url('/') }}" class="brand">
             <img src="{{ asset('images/logo.png') }}" alt="Waroenk Logo">
         </a>
-        <form action="/search" class="w-100 mx-2 max-w-lg">
-            <div class="input-group">
+
+        {{-- Search Bar --}}
+        <form action="/search" class="flex-grow-1 mx-2" style="max-width: 600px;">
+            <div class="input-group position-relative">
                 <input id="search-bar" type="text" placeholder="Cari produk disini..." name="q"
                     class="form-control rounded-pill pe-5 shadow-sm" required aria-label="Cari produk">
                 <button type="submit" class="btn position-absolute end-0 top-50 translate-middle-y me-1" aria-label="Cari">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="bi bi-search" style="width: 20px; height: 20px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
+                    <i class="bi bi-search"></i>
                 </button>
             </div>
         </form>
-        <div class="d-flex">
-            {{-- Kalau user belum login, tampilkan Login & Sign Up --}}
+
+        {{-- Keranjang + Auth --}}
+        <div class="d-flex align-items-center">
+            {{-- Keranjang --}}
+            <a href="{{ url('/cart') }}" class="btn btn-light position-relative me-3">
+                <i class="bi bi-cart" style="font-size: 1.4rem;"></i>
+                {{-- Badge jumlah item di keranjang --}}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    3
+                </span>
+            </a>
+
+            {{-- Kalau user belum login --}}
             @guest
                 <a href="{{ route('login') }}" class="btn-login">Login</a>
                 <a href="{{ route('register') }}" class="btn-signup">Sign Up</a>
             @endguest
 
-            {{-- Kalau user sudah login, tampilkan nama + tombol logout --}}
+            {{-- Kalau user sudah login --}}
             @auth
                 <span class="me-3">Halo, {{ Auth::user()->name }}</span>
                 <form action="{{ route('logout') }}" method="POST" style="display:inline;">
@@ -96,19 +105,17 @@
         @yield('content')
     </main>
 
+    {{-- Footer --}}
     <footer class="text-white pt-5 pb-4" style="background-color: #20232A;">
         <div class="container text-center text-md-start">
             <div class="row text-center text-md-start">
-
-                {{-- Kolom 1: Branding Waroenk --}}
                 <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
                     <img src="{{ asset('images/logo.png') }}" alt="Waroenk Logo" class="height: 20px;">
                     <p>
-                        Platform digital untuk mendukung dan memajukan Usaha Mikro, Kecil, dan Menengah (UMKM) lokal. Temukan produk unik dan berkualitas langsung dari pengrajinnya.
+                        Platform digital untuk mendukung dan memajukan UMKM lokal. 
+                        Temukan produk unik dan berkualitas langsung dari pengrajinnya.
                     </p>
                 </div>
-
-                {{-- Kolom 2: Link Produk --}}
                 <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                     <h5 class="text-uppercase mb-4 fw-bold">Jelajahi</h5>
                     <p><a href="#" class="text-white" style="text-decoration: none;">Produk Terbaru</a></p>
@@ -116,8 +123,6 @@
                     <p><a href="#" class="text-white" style="text-decoration: none;">Kategori Populer</a></p>
                     <p><a href="#" class="text-white" style="text-decoration: none;">Semua Produk</a></p>
                 </div>
-
-                {{-- Kolom 3: Link Bantuan --}}
                 <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                     <h5 class="text-uppercase mb-4 fw-bold">Bantuan</h5>
                     <p><a href="#" class="text-white" style="text-decoration: none;">Tentang Kami</a></p>
@@ -125,8 +130,6 @@
                     <p><a href="#" class="text-white" style="text-decoration: none;">FAQ</a></p>
                     <p><a href="#" class="text-white" style="text-decoration: none;">Kebijakan Privasi</a></p>
                 </div>
-
-                {{-- Kolom 4: Kontak & Media Sosial --}}
                 <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
                     <h5 class="text-uppercase mb-4 fw-bold">Kontak</h5>
                     <p><i class="bi bi-house-door-fill me-3"></i> Semarang, Jawa Tengah, ID</p>
@@ -137,9 +140,7 @@
 
             <hr class="mb-4">
 
-            {{-- Baris Hak Cipta dan Media Sosial --}}
             <div class="row align-items-center">
-                {{-- Copyright --}}
                 <div class="col-md-7 col-lg-8">
                     <p>
                         Copyright &copy;2025
@@ -148,22 +149,12 @@
                         </a>. All Rights Reserved.
                     </p>
                 </div>
-
-                {{-- Social Media Icons --}}
                 <div class="col-md-5 col-lg-4">
                     <div class="text-center text-md-end">
-                        <a href="#" class="btn btn-outline-light btn-floating m-1" role="button">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-light btn-floating m-1" role="button">
-                            <i class="bi bi-twitter-x"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-light btn-floating m-1" role="button">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-light btn-floating m-1" role="button">
-                            <i class="bi bi-tiktok"></i>
-                        </a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-tiktok"></i></a>
                     </div>
                 </div>
             </div>

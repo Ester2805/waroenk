@@ -1,144 +1,124 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Home')
 
 @section('content')
-<style>
-    body { background-color: #fff; font-family: Arial, sans-serif; }
-    .header-bar {
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        background-color: #ffffff;
-    }
-    .header-bar img {
-        height: 40px;
-        margin-right: 16px;
-    }
-    .search-box {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        border: 2px solid #4caf50;
-        border-radius: 6px;
-        overflow: hidden;
-    }
-    .search-box input {
-        border: none;
-        padding: 8px;
-        flex: 1;
-        outline: none;
-    }
-    .search-box button {
-        background: #4caf50;
-        border: none;
-        padding: 8px 12px;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    /* Banner */
-    .banner {
-        margin: 20px;
-        padding: 20px;
-        background: #4caf50;
-        color: #fff;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .banner-text h2 { font-size: 24px; font-weight: bold; }
-    .banner-text p { margin: 6px 0; }
-    .banner-text .discount {
-        font-size: 28px;
-        font-weight: bold;
-        background: #fff;
-        color: #2e7d32;
-        padding: 6px 12px;
-        border-radius: 6px;
-        display: inline-block;
-    }
-    .banner img { max-height: 120px; border-radius: 6px; }
-
-    /* Kategori */
-    .kategori {
-        margin: 20px;
-    }
-    .kategori h4 {
-        font-weight: bold;
-        margin-bottom: 16px;
-    }
-    .kategori-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-    }
-    .kategori-item {
-        background: #4caf50;
-        border-radius: 8px;
-        text-align: center;
-        color: #000;
-        padding: 16px;
-    }
-    .kategori-item img {
-        max-height: 120px;
-        margin-bottom: 10px;
-    }
-    .kategori-item h6 {
-        font-weight: bold;
-        font-size: 16px;
-        text-transform: uppercase;
-    }
-</style>
-
-<div class="container">
+<div class="bg-white font-sans">
 
     {{-- Header --}}
-    <div class="header-bar">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo">
-        <form action="/search" class="w-100 mx-2 max-w-5xl">
-            <div class="input-group">
-                <input id="search-bar" type="text" placeholder="Cari produk disini..." name="q"
-                    class="form-control rounded-pill pe-5 shadow-sm" required aria-label="Cari produk">
-                <button type="submit" class="btn position-absolute end-0 top-50 translate-middle-y me-1" aria-label="Cari">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="bi bi-search" style="width: 20px; height: 20px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
-                </button>
-            </div>
+    <div class="flex items-center justify-between px-6 py-4 shadow-sm bg-white">
+        <div class="flex items-center">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 mr-4">
+        </div>
+        <form action="/search" method="GET" class="flex items-center w-full max-w-lg">
+            <input type="text" name="q" placeholder="Cari produk disini..."
+                class="w-full border border-green-500 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+                required>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-r-lg hover:bg-green-600">
+                Cari
+            </button>
         </form>
     </div>
 
     {{-- Banner --}}
-    <div class="banner">
-        <div class="banner-text">
-            <h2>Waroenk UMKM</h2>
-            <p>Semua Ada di Satu Waroenk</p>
-            <span class="discount">Ekstra Diskon 15%</span>
+    <div class="bg-green-500 text-white flex flex-col md:flex-row items-center justify-between p-8 m-6 rounded-lg">
+        <div>
+            <h2 class="text-3xl font-bold">Waroenk UMKM</h2>
+            <p class="mt-2 text-lg">Semua Ada di Satu Waroenk</p>
+            <span class="mt-4 inline-block bg-white text-green-700 px-4 py-2 rounded-lg font-semibold">
+                Ekstra Diskon 15%
+            </span>
         </div>
-        <img src="{{ asset('images/promo.png') }}" alt="Promo">
+        <img src="{{ asset('images/promo.png') }}" alt="Promo" class="mt-6 md:mt-0 max-h-40 rounded-lg">
     </div>
 
     {{-- Kategori --}}
-    <div class="kategori">
-        <h4>Kategori</h4>
-        <div class="kategori-grid">
-            <div class="kategori-item">
-                <img src="{{ asset('images/fashion.png') }}" alt="Fashion">
-                <h6>Fashion</h6>
+    <div class="py-10 px-6">
+        <h2 class="text-2xl font-bold text-slate-900 mb-8">Top Categories</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md">
+                <div class="aspect-square rounded-full overflow-hidden mx-auto">
+                    <img src="https://readymadeui.com/images/fashion-img-1.webp" alt="fashion1"
+                        class="h-full w-full object-cover" />
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="text-slate-900 text-sm font-semibold">Up To 40% OFF</h4>
+                </div>
             </div>
-            <div class="kategori-item">
-                <img src="{{ asset('images/food.png') }}" alt="Food">
-                <h6>Food & Drink</h6>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md">
+                <div class="aspect-square rounded-full overflow-hidden mx-auto">
+                    <img src="https://readymadeui.com/images/fashion-img-2.webp" alt="fashion2"
+                        class="h-full w-full object-cover" />
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="text-slate-900 text-sm font-semibold">Fresh Looks</h4>
+                </div>
             </div>
-            <div class="kategori-item">
-                <img src="{{ asset('images/home.png') }}" alt="Home">
-                <h6>Home</h6>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md">
+                <div class="aspect-square rounded-full overflow-hidden mx-auto">
+                    <img src="https://readymadeui.com/images/fashion-img-7.webp" alt="fashion3"
+                        class="h-full w-full object-cover" />
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="text-slate-900 text-sm font-semibold">Up To 30% OFF</h4>
+                </div>
             </div>
-            <div class="kategori-item">
-                <img src="{{ asset('images/accessories.png') }}" alt="Accessories">
-                <h6>Accessories & Decorations</h6>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md">
+                <div class="aspect-square rounded-full overflow-hidden mx-auto">
+                    <img src="https://readymadeui.com/images/fashion-img-4.webp" alt="fashion4"
+                        class="h-full w-full object-cover" />
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="text-slate-900 text-sm font-semibold">Exclusive Fashion</h4>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md">
+                <div class="aspect-square rounded-full overflow-hidden mx-auto">
+                    <img src="https://readymadeui.com/images/fashion-img-5.webp" alt="fashion5"
+                        class="h-full w-full object-cover" />
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="text-slate-900 text-sm font-semibold">Top Picks for Less</h4>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md">
+                <div class="aspect-square rounded-full overflow-hidden mx-auto">
+                    <img src="https://readymadeui.com/images/fashion-img-6.webp" alt="fashion6"
+                        class="h-full w-full object-cover" />
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="text-slate-900 text-sm font-semibold">Shop & Save 40%</h4>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {{-- Rekomendasi Produk --}}
+    <div class="px-6 pb-10">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Rekomendasi Produk</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {{-- Placeholder contoh produk --}}
+            <div class="bg-white border rounded-lg shadow-sm p-4">
+                <img src="https://via.placeholder.com/200" alt="Produk" class="w-full h-40 object-cover rounded-md">
+                <h4 class="mt-2 font-semibold text-slate-800">Produk A</h4>
+                <p class="text-green-600 font-bold">Rp 50.000</p>
+            </div>
+            <div class="bg-white border rounded-lg shadow-sm p-4">
+                <img src="https://via.placeholder.com/200" alt="Produk" class="w-full h-40 object-cover rounded-md">
+                <h4 class="mt-2 font-semibold text-slate-800">Produk B</h4>
+                <p class="text-green-600 font-bold">Rp 75.000</p>
+            </div>
+            <div class="bg-white border rounded-lg shadow-sm p-4">
+                <img src="https://via.placeholder.com/200" alt="Produk" class="w-full h-40 object-cover rounded-md">
+                <h4 class="mt-2 font-semibold text-slate-800">Produk C</h4>
+                <p class="text-green-600 font-bold">Rp 100.000</p>
             </div>
         </div>
     </div>
