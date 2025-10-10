@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController; // ✅ tambahkan
 use App\Models\Order;
+use App\Http\Controllers\AdminController;
 
 Route::middleware(['web'])->group(function () {
 
@@ -59,5 +60,10 @@ Route::middleware(['web'])->group(function () {
             Auth::logout();
             return redirect()->route('landing');
         })->name('logout');
+
+        // Admin routes (hanya untuk admin)
+        Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+            Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+        });
     });
 });

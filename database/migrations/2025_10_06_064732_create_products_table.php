@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        // Buat tabel products hanya jika belum ada (mencegah error pada DB yang sudah berisi tabel)
+        if (!Schema::hasTable('products')) {
+            Schema::create('products', function (Blueprint $table) {
             $table->id(); // ID unik tiap produk
             $table->string('name'); // Nama produk
             $table->text('description')->nullable(); // Deskripsi produk (opsional)
@@ -24,7 +26,8 @@ return new class extends Migration
 
             // Kalau nanti kamu buat tabel categories, ini bisa diaktifkan:
             // $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
-        });
+            });
+        }
     }
 
     /**
