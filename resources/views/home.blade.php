@@ -34,7 +34,7 @@
 
     {{-- Kategori --}}
     <div class="py-10 px-6">
-        <h2 class="text-2xl font-bold text-slate-900 mb-8">Top Categories</h2>
+        <h2 class="text-2xl font-bold text-slate-900 mb-8">Kategori Teratas</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
 
             <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md">

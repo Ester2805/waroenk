@@ -64,14 +64,14 @@
     <div class="login-box">
         {{-- Kiri --}}
         <div class="login-left">
-            <h2>Welcome Back!</h2>
-            <p>Login to continue shopping at Waroenk</p>
+            <h2>Selamat Datang!</h2>
+            <p>Login untuk lanjut berbelanja di Waroenk</p>
         </div>
 
         {{-- Kanan --}}
         <div class="login-right">
             <h3>Login</h3>
-            <p class="mb-3">Don't have an account? <a href="{{ route('register') }}">Sign up</a></p>
+            <p class="mb-3">Tidak punya akun? <a href="{{ route('register') }}">Daftar</a></p>
 
             {{-- Error Validation --}}
             @if($errors->any())
@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <input type="password" name="kata sandi" class="form-control" placeholder="kata sandi" required>
                 </div>
 
                 <button type="submit" class="btn-waroenk">Login</button>
