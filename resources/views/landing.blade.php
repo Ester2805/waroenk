@@ -7,14 +7,14 @@
     body { background-color: #f9fafb; }
     .text-waroenk-green { color: #2e7d32; }
     .btn-waroenk {
-        background-color: #2e7d32;
+        background-color: #66bb6a;
         color: #fff;
         border-radius: 8px;
         padding: 10px 24px;
         font-weight: 600;
         transition: background-color .2s;
     }
-    .btn-waroenk:hover { background-color: #256029; color: #fff; }
+    .btn-waroenk:hover { background-color: #43a047; color: #fff; }
     .btn-outline-waroenk {
         border: 2px solid #2e7d32;
         color: #2e7d32;
@@ -45,51 +45,32 @@
     <div class="bg-success text-white d-flex flex-column flex-md-row align-items-center justify-content-between p-5 m-4 rounded">
         <div>
             <h2 class="fw-bold">Waroenk UMKM</h2>
-            <p class="mb-3">Semua Ada di Satu Waroenk</p>
+            <p class="mb-3">Semua Ada di Waroenk</p>
             <span class="bg-white text-success px-3 py-2 rounded fw-semibold">Ekstra Diskon 15%</span>
         </div>
-        <img src="{{ asset('images/promo.png') }}" alt="Promo" class="mt-4 mt-md-0 rounded" style="max-height:120px;">
     </div>
 
     {{-- Kategori --}}
     <div class="py-5 px-4">
-        <h2 class="fw-bold mb-4">Top Categories</h2>
+        <h2 class="fw-bold mb-4">Kategori Teratas</h2>
         <div class="row g-4">
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="bg-light p-3 rounded text-center shadow-sm h-100">
-                    <img src="https://readymadeui.com/images/fashion-img-1.webp" class="img-fluid rounded-circle mb-3" alt="Fashion">
-                    <h6 class="fw-semibold small">Up To 40% OFF</h6>
-                </div>
+                <button class="btn btn-waroenk w-100 py-4 mb-2 fw-semibold" type="button">Diskon hingga 40%</button>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="bg-light p-3 rounded text-center shadow-sm h-100">
-                    <img src="https://readymadeui.com/images/fashion-img-2.webp" class="img-fluid rounded-circle mb-3" alt="Fashion">
-                    <h6 class="fw-semibold small">Fresh Looks</h6>
-                </div>
+                <button class="btn btn-waroenk w-100 py-4 mb-2 fw-semibold" type="button">Fresh Looks</button>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="bg-light p-3 rounded text-center shadow-sm h-100">
-                    <img src="https://readymadeui.com/images/fashion-img-7.webp" class="img-fluid rounded-circle mb-3" alt="Fashion">
-                    <h6 class="fw-semibold small">Up To 30% OFF</h6>
-                </div>
+                <button class="btn btn-waroenk w-100 py-4 mb-2 fw-semibold" type="button">Diskon hingga 30%</button>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="bg-light p-3 rounded text-center shadow-sm h-100">
-                    <img src="https://readymadeui.com/images/fashion-img-4.webp" class="img-fluid rounded-circle mb-3" alt="Fashion">
-                    <h6 class="fw-semibold small">Exclusive Fashion</h6>
-                </div>
+                <button class="btn btn-waroenk w-100 py-4 mb-2 fw-semibold" type="button">Pakaian Ekslusif</button>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="bg-light p-3 rounded text-center shadow-sm h-100">
-                    <img src="https://readymadeui.com/images/fashion-img-5.webp" class="img-fluid rounded-circle mb-3" alt="Fashion">
-                    <h6 class="fw-semibold small">Top Picks</h6>
-                </div>
+                <button class="btn btn-waroenk w-100 py-4 mb-2 fw-semibold" type="button">Pilihan Terbaik</button>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="bg-light p-3 rounded text-center shadow-sm h-100">
-                    <img src="https://readymadeui.com/images/fashion-img-6.webp" class="img-fluid rounded-circle mb-3" alt="Fashion">
-                    <h6 class="fw-semibold small">Shop & Save</h6>
-                </div>
+                <button class="btn btn-waroenk w-100 py-4 mb-2 fw-semibold" type="button">Simpan & Belanja</button>
             </div>
         </div>
     </div>
@@ -104,7 +85,7 @@
                 <div class="product-card p-3">
                     <img src="https://images.unsplash.com/photo-1628202926206-c63a34b1618f?q=80&w=500&auto=format" alt="Wireless Headphones" class="product-card-img">
                     <div class="mt-3">
-                        <p class="text-success fw-bold">$49.99 <span class="text-muted text-decoration-line-through">$80.00</span></p>
+                        <p class="text-success fw-bold">Rp49.999 <span class="text-muted text-decoration-line-through">Rp80.000</span></p>
                         <h6 class="fw-semibold">Wireless Headphones</h6>
                     </div>
 
@@ -121,9 +102,9 @@
             {{-- Produk 2 --}}
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="product-card p-3">
-                    <img src="{{ asset('images/sepatu-wanita.jpg') }}" alt="Sepatu Wanita" class="product-card-img">
+                    <img src="{{ asset('images/sepatu-wanita-canvas.jpg') }}" alt="Sepatu Wanita Canvas" class="product-card-img">
                     <div class="mt-3">
-                        <p class="text-success fw-bold">$35.50 <span class="text-muted text-decoration-line-through">$50.00</span></p>
+                        <p class="text-success fw-bold">Rp35.500 <span class="text-muted text-decoration-line-through">Rp50.000</span></p>
                         <h6 class="fw-semibold">Sepatu Wanita Canvas</h6>
                     </div>
 
@@ -141,7 +122,7 @@
                 <div class="product-card p-3">
                     <img src="{{ asset('images/kemeja-pria.jpg') }}" alt="Kemeja Pria" class="product-card-img">
                     <div class="mt-3">
-                        <p class="text-success fw-bold">$29.99 <span class="text-muted text-decoration-line-through">$45.00</span></p>
+                        <p class="text-success fw-bold">Rp29.999 <span class="text-muted text-decoration-line-through">Rp45.000</span></p>
                         <h6 class="fw-semibold">Kemeja Pria Formal</h6>
                     </div>
 
@@ -159,7 +140,7 @@
                 <div class="product-card p-3">
                     <img src="{{ asset('images/dress.jpg') }}" alt="Summer Dress" class="product-card-img">
                     <div class="mt-3">
-                        <p class="text-success fw-bold">$55.00 <span class="text-muted text-decoration-line-through">$70.00</span></p>
+                        <p class="text-success fw-bold">Rp55.000 <span class="text-muted text-decoration-line-through">Rp70.000</span></p>
                         <h6 class="fw-semibold">Summer Floral Dress</h6>
                     </div>
 

@@ -69,14 +69,14 @@
     <div class="register-box">
         {{-- Kiri --}}
         <div class="register-left">
-            <h2>Welcome to</h2>
+            <h2>Selamat Datang di</h2>
             <h1>Waroenk!</h1>
         </div>
 
         {{-- Kanan --}}
         <div class="register-right">
-            <h3>Get Started</h3>
-            <p class="mb-3">Already have an account? <a href="#">Sign in</a></p>
+            <h3>Mulai Sekarang</h3>
+            <p class="mb-3">Sudah punya akun? <a href="#">Masuk</a></p>
 
             {{-- Error Validation --}}
             @if($errors->any())
@@ -93,7 +93,7 @@
                 @csrf
 
                 <div class="mb-3">
-                    <input type="text" name="name" class="form-control" placeholder="Name" required value="{{ old('name') }}">
+                    <input type="text" name="nama" class="form-control" placeholder="nama" required value="{{ old('name') }}">
                 </div>
 
                 <div class="mb-3">
@@ -101,19 +101,19 @@
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <input type="password" name="kata sandi" class="form-control" placeholder="kata sandi" required>
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required>
+                    <input type="password" name="konfirmasi_kata sandi" class="form-control" placeholder="konfirmasi kata sandi" required>
                 </div>
 
-                <button type="submit" class="btn-waroenk">Sign up</button>
+                <button type="submit" class="btn-waroenk">Daftar</button>
             </form>
 
             <button class="btn btn-light border google-btn">
                 <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
-                Sign up with Google
+                Daftar menggunakan Google
             </button>
         </div>
     </div>
