@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        <form action="{{ route('products.search') }}" method="GET" class="mb-4">
+    <input 
+        type="text" 
+        name="q" 
+        placeholder="Cari produk..." 
+        class="border rounded px-3 py-2"
+        value="{{ request('q') }}"
+    >
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+        Cari
+    </button>
+</form>
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 

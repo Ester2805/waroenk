@@ -231,7 +231,30 @@
             @endif
         </main>
 
-        {{-- ... bagian footer tetap sama untuk saat ini ... --}}
+        {{-- Footer/Checkout Bar --}}
+        <div class="cart-footer">
+            <div class="voucher-section">
+                <input type="text" class="voucher-input" placeholder="Masukkan kode voucher">
+                <button class="voucher-btn">Terapkan</button>
+            </div>
+            
+            <div class="summary-section">
+                <div class="footer-actions">
+                    <input type="checkbox" id="select-all">
+                    <label for="select-all">Pilih Semua</label>
+                </div>
+                
+                <div class="total-summary">
+                    <div>
+                        <div>Total Harga ({{ $items->count() }} Produk)</div>
+                        <div class="final-price">Rp{{ number_format($items->sum('price'), 0, ',', '.') }}</div>
+                    </div>
+                    <a href="{{ route('checkout.index') }}">
+                        <button class="checkout-btn">Checkout</button>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
