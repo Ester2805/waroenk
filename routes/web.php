@@ -64,6 +64,9 @@ Route::middleware(['web'])->group(function () {
         // Admin routes (hanya untuk admin)
         Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+            // Product management
+            Route::get('/products/create', [\App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
+            Route::post('/products', [\App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
         });
     });
 });

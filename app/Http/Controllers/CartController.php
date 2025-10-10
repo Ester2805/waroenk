@@ -9,14 +9,14 @@ use App\Models\OrderItem;
 
 class CartController extends Controller
 {
-    // 🛒 Tampilkan isi keranjang
+    // Tampilkan isi keranjang
     public function index()
     {
         $cart = session()->get('cart', []);
         return view('cart.keranjang', ['items' => $cart]);
     }
 
-    // ➕ Tambah produk ke keranjang
+    // Tambah produk ke keranjang
     public function add($id)
     {
         $product = Product::findOrFail($id);
@@ -37,7 +37,7 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
 
-    // ✏️ Update jumlah produk di keranjang
+    // Update jumlah produk di keranjang
     public function update(Request $request, $id)
     {
         $cart = session()->get('cart', []);
@@ -51,7 +51,7 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Jumlah produk berhasil diperbarui!');
     }
 
-    // ❌ Hapus produk dari keranjang
+    // Hapus produk dari keranjang
     public function remove($id)
     {
         $cart = session()->get('cart', []);
@@ -64,7 +64,7 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Produk berhasil dihapus dari keranjang!');
     }
 
-    // 🧾 Tampilkan halaman checkout
+    // Tampilkan halaman checkout
     public function showCheckout()
     {
         $cart = session()->get('cart', []);
@@ -84,7 +84,7 @@ class CartController extends Controller
         return view('cart.checkout', compact('cart', 'total', 'shipping_cost', 'grand_total'));
     }
 
-    // ✅ Simpan pesanan ke database
+    // Simpan pesanan ke database
     public function checkout(Request $request)
     {
         $cart = session()->get('cart', []);
