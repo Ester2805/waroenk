@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" name="kata sandi" class="form-control" placeholder="kata sandi" required>
+                    <input type="password" name="password" class="form-control" placeholder="Kata Sandi" required>
                 </div>
 
                 <button type="submit" class="btn-waroenk">Login</button>

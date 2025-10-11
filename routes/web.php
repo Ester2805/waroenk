@@ -14,7 +14,10 @@ use App\Http\Controllers\AdminController;
 Route::middleware(['web'])->group(function () {
 
     // ---------------- Landing Page ----------------
-    Route::get('/', function () {
+    Route::get('/', function() {
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
         return view('landing');
     })->name('landing');
 
@@ -67,6 +70,7 @@ Route::middleware(['web'])->group(function () {
             // Product management
             Route::get('/products/create', [\App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
             Route::post('/products', [\App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
+            
         });
     });
 });

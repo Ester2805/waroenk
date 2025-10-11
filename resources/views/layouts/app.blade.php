@@ -55,9 +55,12 @@
     </style>
 </head>
 <body>
+    {{-- Sidebar (fixed on md+ screens) --}}
+    @include('partials.sideAdmin')
+
     @include('partials.navbar')
 
-    <main class="m-0">
+    <main class="m-0 md:pl-64">
         @yield('content')
     </main>
 

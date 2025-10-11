@@ -76,7 +76,7 @@
         {{-- Kanan --}}
         <div class="register-right">
             <h3>Mulai Sekarang</h3>
-            <p class="mb-3">Sudah punya akun? <a href="#">Masuk</a></p>
+            <p class="mb-3">Sudah punya akun? <a href="{{ route('login') }}">Masuk</a></p>
 
             {{-- Error Validation --}}
             @if($errors->any())
