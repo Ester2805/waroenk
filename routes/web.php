@@ -4,53 +4,60 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\CheckoutController; // PASTIKAN INI ADA!
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController; // ✅ tambahkan
+use App\Models\Order;
 
-// ====================================================================
-// AUTHENTICATION ROUTES
-// ====================================================================
+Route::middleware(['web'])->group(function () {
 
-// Register routes
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
+    // ---------------- Landing Page ----------------
+    Route::get('/', function () {
+        return view('landing');
+    })->name('landing');
 
-// Login routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+    // ---------------- Produk ----------------
+    Route::prefix('products')->name('products.')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+    });
 
-// Logout route
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect()->route('landing');
-})->name('logout');
+    // ---------------- Keranjang ----------------
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add/{id}', [CartController::class, 'add'])->name('add');
+        Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
+        Route::patch('/update/{id}', [CartController::class, 'update'])->name('update');
+        
+        Route::get('/checkout', [CartController::class, 'showCheckout'])->name('checkout.show'); // ✅ halaman form checkout
+        Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout'); // ✅ proses checkout
+    });
 
+    // ---------------- Riwayat Pesanan ----------------
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index'); // ✅ daftar pesanan
+        Route::get('/{id}', [OrderController::class, 'show'])->name('show'); // ✅ detail pesanan
+    });
 
-// ====================================================================
-// E-COMMERCE & UTILITY ROUTES
-// ====================================================================
+    // ---------------- Search ----------------
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
 
-// Route Keranjang (Cart)
-Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    // ---------------- Auth ----------------
+    Route::middleware('guest')->group(function () {
+        // Register
+        Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 
-// Route Checkout (YANG HILANG)
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-Route::get('/order/success', function () {
-    return view('order.success');
-})->name('order.success');
+        // Login
+        Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+    });
 
-
-// Search
-Route::get('/search', [SearchController::class, 'index'])->name('search');
-
-
-// ====================================================================
-// LANDING PAGE
-// ====================================================================
-
-Route::get('/', function () {
-    return view('landing');
-})->name('landing');
+    Route::middleware('auth')->group(function () {
+        // Logout
+        Route::post('/logout', function () {
+            Auth::logout();
+            return redirect()->route('landing');
+        })->name('logout');
+    });
+});

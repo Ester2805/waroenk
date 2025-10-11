@@ -7,14 +7,20 @@ use App\Models\Product;
 
 class SearchController extends Controller
 {
+    // Fitur pencarian produk berdasarkan nama
     public function index(Request $request)
     {
-        $query = $request->input('q');
+        $keyword = $request->input('q');
 
-        $results = Product::where('name', 'like', "%{$query}%")
-                          ->orWhere('description', 'like', "%{$query}%")
-                          ->get();
+        // Jika tidak ada keyword, tampilkan semua produk aktif
+        if (!$keyword) {
+            $products = Product::where('is_active', true)->get();
+        } else {
+            $products = Product::where('is_active', true)
+                ->where('name', 'like', "%{$keyword}%")
+                ->get();
+        }
 
-        return view('search.results', compact('results', 'query'));
+        return view('products.index', compact('products', 'keyword'));
     }
 }
