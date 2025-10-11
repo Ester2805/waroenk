@@ -14,7 +14,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            padding-top: 90px; /* ruang untuk navbar fixed */
+            padding-top: 90px;
         }
         .navbar-waroenk {
             background-color: #f9fafb;
@@ -57,7 +57,7 @@
 <body>
     @include('partials.navbar')
 
-    <main class="p-4">
+    <main class="m-0">
         @yield('content')
     </main>
 

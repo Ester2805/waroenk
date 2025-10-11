@@ -111,10 +111,6 @@
                 <button type="submit" class="btn-waroenk">Daftar</button>
             </form>
 
-            <button class="btn btn-light border google-btn">
-                <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
-                Daftar menggunakan Google
-            </button>
         </div>
     </div>
 </div>
