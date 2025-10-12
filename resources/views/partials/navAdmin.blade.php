@@ -18,9 +18,13 @@
         <!-- right -->
         <div class="hidden md:flex flex-1 justify-end items-center">
             <span class="mr-4">Halo, Admin Waroenk</span>
-            <button class="border border-primary-500 text-primary-500 hover:bg-primary-50 px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                Logout
-            </button>
+            @auth
+                <span class="me-3">Halo, {{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn-signup">Logout</button>
+                </form>
+            @endauth
         </div>
         <!-- end right -->
 
