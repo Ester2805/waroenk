@@ -16,22 +16,18 @@
             </div>
         </form>
         {{-- Keranjang --}}
-        <a href="{{ url('/cart') }}" class="btn btn-light position-relative me-3">
-            <i class="bi bi-cart" style="font-size: 1.4rem;"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ session('cart') ? count(session('cart')) : 0 }}
-                <span class="visually-hidden">unread messages</span>
-        </a>
+        {{-- (dihapus, biar tidak dobel) --}}
     @endif
     {{-- Keranjang + Auth --}}
     <div class="d-flex align-items-center">
-        {{-- Keranjang
-        <a href="{{ url('/cart') }}" class="btn btn-light position-relative me-3">
+        {{-- Keranjang--}}
+        <a href="{{ url('/cart') }}" class="btn btn-light position-relative me-5">
             <i class="bi bi-cart" style="font-size: 1.4rem;"></i>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 {{ session('cart') ? count(session('cart')) : 0 }}
                 <span class="visually-hidden">unread messages</span>
-        </a> --}}
+        </a> 
+
         {{-- Kalau user belum login --}}
         @guest
             @if (!Request::is('login') && !Request::is('register'))
