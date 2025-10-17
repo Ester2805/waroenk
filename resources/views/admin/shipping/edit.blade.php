@@ -3,15 +3,23 @@
 @section('title', 'Edit Opsi Pengiriman')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Edit Opsi Pengiriman</h1>
-        <a href="{{ route('admin.shipping-options.index') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Kembali
-        </a>
+<div class="admin-page">
+    <div class="admin-hero">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
+            <div>
+                <span class="badge">Pengiriman</span>
+                <h1>Edit Opsi Pengiriman</h1>
+                <p>Perbarui detail opsi pengiriman agar layanan pengantaran tetap akurat dan terpercaya.</p>
+            </div>
+            <div class="actions">
+                <a href="{{ route('admin.shipping-options.index') }}" class="btn btn-outline-accent">
+                    <i class="bi bi-arrow-left me-2"></i>Kembali
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div class="card shadow-sm">
+    <div class="admin-card">
         <div class="card-body">
             <form method="POST" action="{{ route('admin.shipping-options.update', $shippingOption) }}" class="row g-3">
                 @csrf
@@ -40,8 +48,8 @@
                         <label class="form-check-label" for="is_active">Aktifkan opsi pengiriman</label>
                     </div>
                 </div>
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-accent"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
                 </div>
             </form>
         </div>

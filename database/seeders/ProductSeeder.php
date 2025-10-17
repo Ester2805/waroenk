@@ -14,21 +14,24 @@ class ProductSeeder extends Seeder
             'name' => 'Indomie Goreng',
             'description' => 'Mi instan rasa goreng spesial',
             'price' => 3000,
-            'image' => 'indomie.jpg',
+            'stock' => 120,
+            'image_path' => 'products/indomie.jpg',
         ]);
 
         Product::create([
             'name' => 'Gulaku Gula Tebu',
             'description' => 'Gula tebu premium 1kg',
             'price' => 15000,
-            'image' => 'gulaku.jpg',
+            'stock' => 80,
+            'image_path' => 'products/gulaku.jpg',
         ]);
 
         Product::create([
             'name' => 'Minyak Goreng',
             'description' => 'Minyak goreng 2 liter',
             'price' => 28000,
-            'image' => 'minyak.jpg',
+            'stock' => 60,
+            'image_path' => 'products/minyak.jpg',
         ]);
     }
 }

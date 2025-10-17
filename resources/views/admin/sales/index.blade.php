@@ -3,23 +3,26 @@
 @section('title', 'Manajemen Penjualan')
 
 @section('content')
-    <div class="container-fluid py-4">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+<div class="admin-page">
+    <div class="admin-hero">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
             <div>
-                <h1 class="h3 fw-bold text-success mb-1">Manajemen Penjualan</h1>
-                <p class="text-muted mb-0">Pantau dan kelola semua pesanan pelanggan.</p>
+                <span class="badge">Penjualan</span>
+                <h1>Manajemen Penjualan</h1>
+                <p>Pantau dan kelola semua pesanan pelanggan, ubah status, dan pastikan setiap transaksi berjalan lancar.</p>
             </div>
-            <form method="GET" class="d-flex gap-2">
-            <select name="status" class="form-select">
-                <option value="">Semua Status</option>
-                <option value="belum bayar" {{ $status === 'belum bayar' ? 'selected' : '' }}>Belum Bayar</option>
-                <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="diproses" {{ $status === 'diproses' ? 'selected' : '' }}>Diproses</option>
-                <option value="dikirim" {{ $status === 'dikirim' ? 'selected' : '' }}>Dikirim</option>
-                <option value="completed" {{ $status === 'completed' ? 'selected' : '' }}>Selesai</option>
-            </select>
-            <button class="btn btn-success" type="submit">Filter</button>
-        </form>
+            <form method="GET" class="actions d-flex gap-2">
+                <select name="status" class="form-select" style="min-width: 160px;">
+                    <option value="">Semua Status</option>
+                    <option value="belum bayar" {{ $status === 'belum bayar' ? 'selected' : '' }}>Belum Bayar</option>
+                    <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="diproses" {{ $status === 'diproses' ? 'selected' : '' }}>Diproses</option>
+                    <option value="dikirim" {{ $status === 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                    <option value="completed" {{ $status === 'completed' ? 'selected' : '' }}>Selesai</option>
+                </select>
+                <button class="btn btn-accent" type="submit">Filter</button>
+            </form>
+        </div>
     </div>
 
     @if(session('success'))
@@ -28,7 +31,7 @@
 
     <div class="row g-3 mb-4">
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Total Pesanan</p>
                     <h4 class="fw-bold mb-0">{{ number_format($summary['total_orders']) }}</h4>
@@ -36,7 +39,7 @@
             </div>
         </div>
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Belum Bayar</p>
                     <h4 class="fw-bold mb-0">{{ number_format($summary['unpaid']) }}</h4>
@@ -44,7 +47,7 @@
             </div>
         </div>
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Pending</p>
                     <h4 class="fw-bold mb-0">{{ number_format($summary['pending']) }}</h4>
@@ -52,7 +55,7 @@
             </div>
         </div>
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Selesai</p>
                     <h4 class="fw-bold mb-0">{{ number_format($summary['completed']) }}</h4>
@@ -60,7 +63,7 @@
             </div>
         </div>
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Pendapatan</p>
                     <h4 class="fw-bold mb-0">Rp{{ number_format($summary['revenue'], 0, ',', '.') }}</h4>
@@ -69,10 +72,10 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
+    <div class="admin-table-card">
         <div class="table-responsive">
             <table class="table align-middle mb-0">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th>#ID</th>
                         <th>Pelanggan</th>
@@ -92,7 +95,7 @@
                                 <small class="text-muted">{{ $order->phone }}</small>
                             </td>
                             <td>
-                                <span class="badge text-uppercase {{ $order->status === 'completed' ? 'bg-success-subtle text-success-emphasis' : ($order->status === 'pending' ? 'bg-warning-subtle text-warning-emphasis' : 'bg-danger-subtle text-danger-emphasis') }}">
+                                <span class="badge text-uppercase {{ $order->status === 'completed' ? 'bg-success-subtle text-success-emphasis' : ($order->status === 'pending' ? 'bg-warning-subtle text-warning-emphasis' : 'bg-secondary-subtle text-secondary-emphasis') }}">
                                     {{ $order->status }}
                                 </span>
                             </td>
@@ -112,7 +115,7 @@
                                             <option value="{{ $value }}" {{ $order->status === $value ? 'selected' : '' }}>{{ $label }}</option>
                                         @endforeach
                                     </select>
-                                    <button class="btn btn-sm btn-success" type="submit">Simpan</button>
+                                    <button class="btn btn-sm btn-accent" type="submit">Simpan</button>
                                 </form>
                             </td>
                         </tr>
@@ -133,7 +136,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-4">Belum ada pesanan dengan filter ini.</td>
+                            <td colspan="7" class="text-center text-muted py-4">Belum ada pesanan dengan filter ini.</td>
                         </tr>
                     @endforelse
                 </tbody>

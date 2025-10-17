@@ -4,76 +4,111 @@
 
 @section('content')
 <style>
-    .login-container {
+    .auth-wrapper {
+        min-height: calc(100vh - 70px);
         display: flex;
-        min-height: 100vh;
         align-items: center;
         justify-content: center;
-        background: #f9fafb;
+        padding: clamp(24px, 6vw, 48px);
+        background: radial-gradient(circle at top left, rgba(102, 187, 106, 0.12), transparent 55%),
+            radial-gradient(circle at bottom right, rgba(46, 125, 50, 0.12), transparent 50%),
+            #f4f7fb;
     }
-    .login-box {
-        display: flex;
-        width: 800px;
+
+    .auth-card {
+        width: min(960px, 100%);
         background: #fff;
-        border-radius: 12px;
+        border-radius: 28px;
+        box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
-    .login-left {
-        flex: 1;
-        background: linear-gradient(135deg, #64b5f6, #81c784);
+
+    .auth-illustration {
+        background: linear-gradient(135deg, rgba(46, 125, 50, 0.92), rgba(102, 187, 106, 0.85));
+        color: #fff;
+        padding: clamp(32px, 6vw, 48px);
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
-        color: #fff;
-        padding: 40px;
-        font-weight: 600;
+        gap: 16px;
     }
-    .login-left h2 {
-        font-size: 28px;
-        margin-bottom: 8px;
-    }
-    .login-right {
-        flex: 1;
-        padding: 40px;
-    }
-    .login-right h3 {
+
+    .auth-illustration h2 {
+        font-size: clamp(26px, 3vw, 32px);
         font-weight: 700;
-        margin-bottom: 20px;
+        margin: 0;
     }
-    .form-control {
-        border-radius: 8px;
+
+    .auth-illustration p {
+        margin: 0;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.85);
     }
-    .btn-waroenk {
-        background-color: #2e7d32;
-        color: #fff;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 600;
-        width: 100%;
+
+    .auth-form {
+        padding: clamp(32px, 6vw, 48px);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .auth-form h3 {
+        font-weight: 700;
+        color: #1f2933;
+        margin: 0;
+    }
+
+    .auth-form .form-control {
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .auth-form .btn-primary {
+        background: #2e7d32;
         border: none;
+        border-radius: 12px;
+        padding: 12px;
+        font-weight: 600;
     }
-    .btn-waroenk:hover {
-        background-color: #256029;
-        color: #fff;
+
+    .auth-form .btn-primary:hover {
+        background: #256029;
+    }
+
+    .auth-extra {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #6b7280;
+    }
+
+    .auth-extra a {
+        color: #2e7d32;
+        font-weight: 600;
+    }
+
+    @media (max-width: 767.98px) {
+        .auth-illustration {
+            text-align: center;
+            align-items: center;
+        }
     }
 </style>
 
-<div class="login-container">
-    <div class="login-box">
-        {{-- Kiri --}}
-        <div class="login-left">
-            <h2>Selamat Datang!</h2>
-            <p>Login untuk lanjut berbelanja di Waroenk</p>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-illustration">
+            <span class="badge bg-white text-success fw-semibold px-3 py-2" style="width: fit-content;">Selamat Datang</span>
+            <h2>Masuk ke Waroenk</h2>
+            <p>Nikmati produk UMKM pilihan, pantau pesanan, dan dapatkan promo khusus pelanggan.</p>
         </div>
+        <div class="auth-form">
+            <div>
+                <h3>Login</h3>
+                <p class="auth-extra mb-0">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></p>
+            </div>
 
-        {{-- Kanan --}}
-        <div class="login-right">
-            <h3>Login</h3>
-            <p class="mb-3">Tidak punya akun? <a href="{{ route('register') }}">Daftar</a></p>
-
-            {{-- Error Validation --}}
             @if($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -84,18 +119,21 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login.post') }}">
+            <form method="POST" action="{{ route('login.post') }}" class="d-flex flex-column gap-3">
                 @csrf
 
-                <div class="mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required value="{{ old('email') }}">
+                <div>
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="nama@email.com" required value="{{ old('email') }}">
                 </div>
 
-                <div class="mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Kata Sandi" required>
+                <div>
+                    <label class="form-label fw-semibold">Kata Sandi</label>
+                    <input type="password" name="password" class="form-control" placeholder="******" required>
                 </div>
 
-                <button type="submit" class="btn-waroenk">Login</button>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p class="auth-extra">Masuk sebagai admin? gunakan email `admin@example.com` dan password `111111`.</p>
             </form>
         </div>
     </div>

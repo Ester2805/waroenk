@@ -3,27 +3,24 @@
 @section('title', 'Kelola Pengguna')
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div>
-            <h1 class="h3 fw-bold text-success mb-1">Kelola Pengguna</h1>
-            <p class="text-muted mb-0">Lihat pengguna aktif, cari akun, dan ubah peran mereka.</p>
+<div class="admin-page">
+    <div class="admin-hero">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
+            <div>
+                <span class="badge">Pengguna</span>
+                <h1>Kelola Pengguna</h1>
+                <p>Kelola akun administrator dan pengguna, ubah peran, dan cari pengguna berdasarkan nama atau email.</p>
+            </div>
+            <form method="GET" class="actions d-flex flex-wrap gap-2">
+                <input type="text" name="q" value="{{ $search }}" class="form-control" placeholder="Cari nama atau email" style="min-width: 200px;">
+                <select name="role" class="form-select" style="min-width: 140px;">
+                    <option value="">Semua Peran</option>
+                    <option value="user" {{ $role === 'user' ? 'selected' : '' }}>User</option>
+                    <option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>Admin</option>
+                </select>
+                <button class="btn btn-accent" type="submit">Filter</button>
+            </form>
         </div>
-        <form method="GET" class="d-flex gap-2">
-            <input
-                type="text"
-                name="q"
-                value="{{ $search }}"
-                class="form-control"
-                placeholder="Cari nama atau email"
-            >
-            <select name="role" class="form-select">
-                <option value="">Semua Peran</option>
-                <option value="user" {{ $role === 'user' ? 'selected' : '' }}>User</option>
-                <option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>Admin</option>
-            </select>
-            <button class="btn btn-success" type="submit">Filter</button>
-        </form>
     </div>
 
     @if(session('success'))
@@ -32,7 +29,7 @@
 
     <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Total Pengguna</p>
                     <h4 class="fw-bold mb-0">{{ number_format($counts['total']) }}</h4>
@@ -40,7 +37,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Admin</p>
                     <h4 class="fw-bold mb-0">{{ number_format($counts['admin']) }}</h4>
@@ -48,7 +45,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">User Biasa</p>
                     <h4 class="fw-bold mb-0">{{ number_format($counts['user']) }}</h4>
@@ -57,10 +54,10 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
+    <div class="admin-table-card">
         <div class="table-responsive">
             <table class="table align-middle mb-0">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th>Nama</th>
                         <th>Email</th>
@@ -86,7 +83,7 @@
                                         <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
                                         <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                     </select>
-                                    <button class="btn btn-sm btn-outline-success" type="submit">Simpan</button>
+                                    <button class="btn btn-sm btn-accent" type="submit">Simpan</button>
                                 </form>
                             </td>
                         </tr>

@@ -3,16 +3,21 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="mb-4">
-        <h1 class="h3 fw-bold text-success mb-1">Dashboard Admin</h1>
-        <p class="text-muted mb-0">Ringkasan singkat aktivitas toko online Anda.</p>
+<div class="admin-page">
+    <div class="admin-hero">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
+            <div>
+                <span class="badge">Dashboard</span>
+                <h1>Dashboard Admin</h1>
+                <p>Ringkasan singkat aktivitas toko online Anda, termasuk performa penjualan dan status pemesanan terbaru.</p>
+            </div>
+        </div>
     </div>
 
     {{-- Kartu Statistik --}}
     <div class="row g-3 mb-4">
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
@@ -31,7 +36,7 @@
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
@@ -50,7 +55,7 @@
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
@@ -69,7 +74,7 @@
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <div>
@@ -91,7 +96,7 @@
     {{-- Ringkasan Tambahan --}}
     <div class="row g-3 mb-4">
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Kategori</p>
                     <h4 class="fw-bold mb-0">{{ number_format($totalCategories) }}</h4>
@@ -100,7 +105,7 @@
             </div>
         </div>
         <div class="col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-body">
                     <p class="text-uppercase text-muted small mb-1">Pengguna</p>
                     <h4 class="fw-bold mb-0">{{ number_format($totalUsers) }}</h4>
@@ -113,7 +118,7 @@
     <div class="row g-4">
         {{-- Tabel Pesanan Terbaru --}}
         <div class="col-xl-8">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-table-card h-100">
                 <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Pesanan Terbaru</h5>
                     <span class="badge bg-success-subtle text-success-emphasis">{{ $recentOrders->count() }} pesanan</span>
@@ -159,7 +164,7 @@
 
         {{-- Produk Stok Rendah --}}
         <div class="col-xl-4">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-header bg-white border-0">
                     <h5 class="card-title mb-0">Stok Rendah</h5>
                     <span class="text-muted small">Pantau produk yang hampir habis.</span>

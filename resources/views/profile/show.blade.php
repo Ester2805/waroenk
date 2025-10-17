@@ -3,30 +3,83 @@
 @section('title', 'Profil Saya')
 
 @section('content')
-<section class="py-5" style="background:#f4f6f8; min-height:80vh;">
-    <div class="container" style="max-width:960px;">
+<style>
+    .profile-page {
+        background: radial-gradient(circle at top left, rgba(102, 187, 106, 0.12), transparent 55%),
+            radial-gradient(circle at bottom right, rgba(46, 125, 50, 0.12), transparent 55%),
+            #f4f7fb;
+        min-height: calc(100vh - 120px);
+        padding-top: clamp(48px, 8vw, 80px);
+        padding-bottom: clamp(64px, 12vw, 120px);
+    }
+
+    .profile-header-card {
+        background: linear-gradient(135deg, rgba(46, 125, 50, 0.08), rgba(102, 187, 106, 0.16));
+        border-radius: 24px;
+        padding: clamp(24px, 4vw, 40px);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+        margin-bottom: clamp(24px, 4vw, 36px);
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 24px;
+        overflow: hidden;
+        background: rgba(46, 125, 50, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 42px;
+        color: #2e7d32;
+        box-shadow: inset 0 0 0 2px rgba(46, 125, 50, 0.15);
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+        padding: clamp(28px, 5vw, 44px);
+    }
+
+    @media (max-width: 767.98px) {
+        .profile-header-card {
+            align-items: center;
+            text-align: center;
+        }
+        .profile-card {
+            padding: 24px;
+        }
+    }
+</style>
+
+<section class="profile-page">
+    <div class="container-fluid" style="max-width:1180px;">
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <div class="bg-white rounded-4 shadow-sm p-4 mb-4 d-flex flex-column flex-md-row align-items-md-center gap-4">
-            <div class="position-relative">
-                <div class="rounded-circle bg-success-subtle text-success-emphasis d-flex align-items-center justify-content-center" style="width:100px; height:100px; font-size:34px; overflow:hidden;">
+        <div class="profile-header-card">
+            <div class="d-flex flex-column flex-md-row align-items-md-center gap-4">
+                <div class="profile-avatar">
                     @if($user->avatar_url)
                         <img src="{{ $user->avatar_url }}" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">
                     @else
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     @endif
                 </div>
-            </div>
-            <div>
-                <h2 class="fw-bold mb-1">{{ $user->name }}</h2>
-                <p class="text-muted mb-1">{{ $user->email }}</p>
-                <span class="badge bg-success-subtle text-success-emphasis">{{ $user->role === 'admin' ? 'Admin' : 'Pengguna' }}</span>
+                <div>
+                    <span class="badge bg-success text-white mb-2">{{ $user->role === 'admin' ? 'Admin' : 'Pengguna' }}</span>
+                    <h2 class="fw-bold mb-1 text-dark">{{ $user->name }}</h2>
+                    <p class="text-muted mb-0">{{ $user->email }}</p>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-4 shadow-sm p-4">
+        <div class="profile-card">
             <h5 class="fw-semibold mb-3">Informasi Profil</h5>
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -77,8 +130,8 @@
                     <small class="text-muted">Format JPG/PNG, ukuran maks 2MB.</small>
                 </div>
 
-                <div class="col-12">
-                    <button type="submit" class="btn btn-success px-4">Simpan Perubahan</button>
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success px-4 py-2">Simpan Perubahan</button>
                 </div>
             </form>
         </div>

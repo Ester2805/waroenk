@@ -3,21 +3,20 @@
 @section('title', 'Analitik Penjualan')
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div>
-            <h1 class="h3 fw-bold text-success mb-1">Analitik Penjualan</h1>
-            <p class="text-muted mb-0">Lihat performa toko berdasarkan pesanan, kategori, dan produk.</p>
-        </div>
-        <div class="d-flex gap-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body py-2 px-3">
+<div class="admin-page">
+    <div class="admin-hero">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
+            <div>
+                <span class="badge">Analitik</span>
+                <h1>Analitik Penjualan</h1>
+                <p>Pantau performa toko berdasarkan pesanan, kategori, dan produk untuk mengambil keputusan bisnis yang lebih tepat.</p>
+            </div>
+            <div class="actions d-flex gap-2">
+                <div class="admin-card px-3 py-2">
                     <p class="text-uppercase text-muted small mb-1">Pendapatan Hari Ini</p>
                     <h5 class="fw-bold mb-0">Rp{{ number_format($todayRevenue, 0, ',', '.') }}</h5>
                 </div>
-            </div>
-            <div class="card border-0 shadow-sm">
-                <div class="card-body py-2 px-3">
+                <div class="admin-card px-3 py-2">
                     <p class="text-uppercase text-muted small mb-1">Pesanan Hari Ini</p>
                     <h5 class="fw-bold mb-0">{{ number_format($todayOrders) }}</h5>
                 </div>
@@ -27,7 +26,7 @@
 
     <div class="row g-4 mb-4">
         <div class="col-lg-7">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-header bg-white border-0">
                     <h5 class="card-title mb-0">Pendapatan 12 Bulan Terakhir</h5>
                 </div>
@@ -60,9 +59,10 @@
             </div>
         </div>
         <div class="col-lg-5">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="admin-card h-100">
                 <div class="card-header bg-white border-0">
                     <h5 class="card-title mb-0">Kategori Terlaris</h5>
+                    <span class="text-muted small">Berdasarkan jumlah pesanan</span>
                 </div>
                 <div class="card-body">
                     @forelse($topCategories as $category)
@@ -81,14 +81,14 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
+    <div class="admin-table-card">
         <div class="card-header bg-white border-0">
             <h5 class="card-title mb-0">Produk Terlaris</h5>
-            <span class="text-muted small">Berdasarkan jumlah terjual.</span>
+            <span class="text-muted small">Berdasarkan jumlah terjual</span>
         </div>
         <div class="table-responsive">
             <table class="table align-middle mb-0">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th>Produk</th>
                         <th>Kategori</th>

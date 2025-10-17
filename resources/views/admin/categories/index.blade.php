@@ -3,12 +3,20 @@
 @section('title', 'Kelola Kategori')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Kelola Kategori</h1>
-        <a href="{{ route('admin.categories.create') }}" class="btn btn-success">
-            <i class="bi bi-plus-circle me-2"></i>Tambah Kategori
-        </a>
+<div class="admin-page">
+    <div class="admin-hero">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
+            <div>
+                <span class="badge">Kategori</span>
+                <h1>Kelola Kategori</h1>
+                <p>Susun kategori produk untuk memudahkan pelanggan menemukan produk UMKM favoritnya.</p>
+            </div>
+            <div class="actions">
+                <a href="{{ route('admin.categories.create') }}" class="btn btn-accent">
+                    <i class="bi bi-plus-circle me-2"></i>Tambah Kategori
+                </a>
+            </div>
+        </div>
     </div>
 
     @if(session('success'))
@@ -19,20 +27,20 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
+    @if($categories->count() > 0)
+        <div class="admin-table-card">
             <div class="table-responsive">
                 <table class="table mb-0 align-middle">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th style="width: 60px;">#</th>
                             <th>Nama Kategori</th>
-                            <th class="text-center" style="width: 150px;">Jumlah Produk</th>
-                            <th class="text-end" style="width: 180px;">Aksi</th>
+                            <th class="text-center" style="width: 160px;">Jumlah Produk</th>
+                            <th class="text-end" style="width: 170px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($categories as $index => $category)
+                        @foreach($categories as $index => $category)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td class="fw-semibold">{{ $category->name }}</td>
@@ -42,7 +50,7 @@
                                     </span>
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-outline-primary">
+                                    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-outline-success me-2">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline">
@@ -54,17 +62,18 @@
                                     </form>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-4">
-                                    Belum ada kategori. Tambahkan kategori pertama Anda.
-                                </td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
+    @else
+        <div class="admin-empty">
+            <div class="admin-empty-icon">🏷️</div>
+            <h4 class="fw-semibold mb-2">Belum ada kategori</h4>
+            <p class="text-muted mb-4">Tambahkan kategori pertama Anda untuk mengelompokkan produk di etalase.</p>
+            <a href="{{ route('admin.categories.create') }}" class="btn btn-accent">Tambah Kategori</a>
+        </div>
+    @endif
 </div>
 @endsection

@@ -3,23 +3,31 @@
 @section('title', 'Kelola Produk')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Kelola Produk</h1>
-        <a href="{{ route('admin.products.create') }}" class="btn btn-success">
-            <i class="bi bi-plus-circle me-2"></i>Tambah Produk
-        </a>
+<div class="admin-page">
+    <div class="admin-hero">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
+            <div>
+                <span class="badge">Produk</span>
+                <h1>Kelola Produk</h1>
+                <p>Atur katalog produk UMKM, perbarui stok, dan optimalkan etalase toko Waroenk agar tetap menarik.</p>
+            </div>
+            <div class="actions">
+                <a href="{{ route('admin.products.create') }}" class="btn btn-accent">
+                    <i class="bi bi-plus-circle me-2"></i>Tambah Produk
+                </a>
+            </div>
+        </div>
     </div>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
+    @if($products->count() > 0)
+        <div class="admin-table-card">
             <div class="table-responsive">
                 <table class="table mb-0 align-middle">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th style="width: 70px;">Gambar</th>
                             <th>Produk</th>
@@ -29,11 +37,11 @@
                             <th class="text-center">Rating</th>
                             <th class="text-center">Stok</th>
                             <th class="text-center">Status</th>
-                            <th class="text-end" style="width: 180px;">Aksi</th>
+                            <th class="text-end" style="width: 170px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($products as $product)
+                        @foreach($products as $product)
                             <tr>
                                 <td>
                                     @if($product->image_url)
@@ -71,7 +79,7 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-primary">
+                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-success me-2">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline">
@@ -83,17 +91,18 @@
                                     </form>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="text-center text-muted py-4">
-                                    Belum ada produk. Tambahkan produk pertama Anda.
-                                </td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
+    @else
+        <div class="admin-empty">
+            <div class="admin-empty-icon">📦</div>
+            <h4 class="fw-semibold mb-2">Belum ada produk</h4>
+            <p class="text-muted mb-4">Mulai tambahkan produk baru untuk mengisi katalog toko.</p>
+            <a href="{{ route('admin.products.create') }}" class="btn btn-accent">Tambah Produk</a>
+        </div>
+    @endif
 </div>
 @endsection
