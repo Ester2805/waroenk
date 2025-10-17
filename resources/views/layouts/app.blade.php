@@ -56,7 +56,7 @@
 </head>
 <body>
     {{-- Sidebar (fixed on md+ screens) --}}
-    @include('partials.sideAdmin')
+    {{-- @include('partials.sideAdmin') --}}
 
     @include('partials.navbar')
 

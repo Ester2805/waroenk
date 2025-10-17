@@ -17,6 +17,13 @@
                     Logout
                 </button>
             </form>
+            @auth
+                <span class="me-3">Halo, {{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn-signup">Logout</button>
+                </form>
+            @endauth
         </div>
         <!-- end right -->
 
