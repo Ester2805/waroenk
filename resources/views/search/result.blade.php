@@ -9,7 +9,13 @@
         @forelse($results as $product)
             <div class="col-md-3 mb-3">
                 <div class="card h-100">
-                    <img src="{{ asset('images/products/'.$product->image) }}" class="card-img-top" alt="{{ $product->name }}">
+                    @if($product->image_url)
+                        <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
+                    @else
+                        <div class="d-flex justify-content-center align-items-center bg-light" style="height: 180px;">
+                            <span class="text-muted small">Tidak ada gambar</span>
+                        </div>
+                    @endif
                     <div class="card-body">
                         <h5 class="card-title">{{ $product->name }}</h5>
                         <p class="card-text">{{ Str::limit($product->description, 60) }}</p>

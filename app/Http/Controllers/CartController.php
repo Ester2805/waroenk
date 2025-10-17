@@ -24,12 +24,13 @@ class CartController extends Controller
 
         if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
+            $cart[$id]['image'] = $product->image_url ?? $cart[$id]['image'];
         } else {
             $cart[$id] = [
                 "name" => $product->name,
                 "price" => $product->price,
                 "quantity" => 1,
-                "image" => $product->image ?? null,
+                "image" => $product->image_url ?? null,
             ];
         }
 
@@ -65,12 +66,31 @@ class CartController extends Controller
     }
 
     // Tampilkan halaman checkout
-    public function showCheckout()
+    public function showCheckout(Request $request)
     {
         $cart = session()->get('cart', []);
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong!');
         }
+
+        $submitted = $request->boolean('submitted');
+        $selected = $request->input('selected', []);
+
+        if ($submitted && empty($selected)) {
+            return redirect()->route('cart.index')->with('error', 'Pilih produk yang ingin di-checkout.');
+        }
+
+        if (!empty($selected)) {
+            $cart = array_filter($cart, function ($value, $key) use ($selected) {
+                return in_array((string)$key, array_map('strval', $selected), true);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong!');
+        }
+
+        session(['checkout_selected' => array_keys($cart)]);
 
         $total = 0;
         foreach ($cart as $id => $item) {
@@ -87,7 +107,16 @@ class CartController extends Controller
     // Simpan pesanan ke database
     public function checkout(Request $request)
     {
-        $cart = session()->get('cart', []);
+        $sessionCart = session()->get('cart', []);
+        $selectedIds = session()->get('checkout_selected', []);
+
+        $cart = $sessionCart;
+        if (!empty($selectedIds)) {
+            $cart = array_filter($sessionCart, function ($value, $key) use ($selectedIds) {
+                return in_array((string)$key, array_map('strval', $selectedIds), true);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong!');
         }
@@ -96,12 +125,21 @@ class CartController extends Controller
             'customer_name' => 'required|string|max:100',
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:255',
-            'payment_method' => 'required|string|max:50',
+            'delivery_note' => 'nullable|string|max:255',
+            'payment_method' => 'required|in:COD,Transfer Bank',
             'shipping_cost' => 'required|numeric|min:0',
         ]);
 
         $total = collect($cart)->reduce(fn($sum, $item) => $sum + ($item['price'] * $item['quantity']), 0);
         $grand_total = $total + $validated['shipping_cost'];
+
+        $virtualAccount = null;
+        $status = 'pending';
+
+        if ($validated['payment_method'] === 'Transfer Bank') {
+            $status = 'belum bayar';
+            $virtualAccount = $this->generateVirtualAccount();
+        }
 
         // Simpan order
         $order = Order::create([
@@ -109,10 +147,12 @@ class CartController extends Controller
             'customer_name' => $validated['customer_name'],
             'phone' => $validated['phone'],
             'address' => $validated['address'],
+            'delivery_note' => $validated['delivery_note'] ?? null,
             'payment_method' => $validated['payment_method'],
+            'virtual_account' => $virtualAccount,
             'shipping_cost' => $validated['shipping_cost'],
             'total' => $grand_total,
-            'status' => 'pending',
+            'status' => $status,
         ]);
 
         // Simpan item ke order_items
@@ -126,7 +166,23 @@ class CartController extends Controller
             ]);
         }
 
-        session()->forget('cart');
-        return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat!');
+        $remainingCart = array_diff_key($sessionCart, $cart);
+        session()->put('cart', $remainingCart);
+        session()->forget('checkout_selected');
+
+        $message = 'Pesanan berhasil dibuat!';
+        if ($virtualAccount) {
+            $message .= ' Silakan lakukan pembayaran ke virtual account: ' . $virtualAccount . '. Pesanan akan diproses setelah pembayaran diterima.';
+        }
+
+        return redirect()->route('orders.show', $order->id)->with('success', $message);
+    }
+
+    private function generateVirtualAccount(): string
+    {
+        $prefix = '8801';
+        $random = str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+
+        return $prefix . $random;
     }
 }

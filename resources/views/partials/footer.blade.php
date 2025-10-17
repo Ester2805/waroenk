@@ -1,5 +1,5 @@
 {{-- Footer --}}
-<footer class="text-white pt-5 pb-4" style="background-color: #20232A;">
+<footer id="site-footer" class="text-white pt-5 pb-4" style="background-color: #20232A;">
     <div class="container text-center text-md-start">
         <div class="row text-center text-md-start">
             <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
@@ -9,19 +9,11 @@
                     Temukan produk unik dan berkualitas langsung dari pengrajinnya.
                 </p>
             </div>
-            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
                 <h5 class="text-uppercase mb-4 fw-bold">Jelajahi</h5>
-                <p><a href="#" class="text-white" style="text-decoration: none;">Produk Terbaru</a></p>
-                <p><a href="#" class="text-white" style="text-decoration: none;">Diskon</a></p>
-                <p><a href="#" class="text-white" style="text-decoration: none;">Kategori Populer</a></p>
-                <p><a href="#" class="text-white" style="text-decoration: none;">Semua Produk</a></p>
-            </div>
-            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-                <h5 class="text-uppercase mb-4 fw-bold">Bantuan</h5>
-                <p><a href="#" class="text-white" style="text-decoration: none;">Tentang Kami</a></p>
-                <p><a href="#" class="text-white" style="text-decoration: none;">Hubungi Kami</a></p>
-                <p><a href="#" class="text-white" style="text-decoration: none;">FAQ</a></p>
-                <p><a href="#" class="text-white" style="text-decoration: none;">Kebijakan Privasi</a></p>
+                <p><a href="{{ route('products.index') }}" class="text-white" style="text-decoration: none;">Semua Produk</a></p>
+                <p><a href="{{ route('landing') }}#section-kategori" class="text-white" style="text-decoration: none;">Kategori</a></p>
+                <p><a href="{{ route('about') }}" class="text-white" style="text-decoration: none;">Tentang Kami</a></p>
             </div>
             <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
                 <h5 class="text-uppercase mb-4 fw-bold">Kontak</h5>
@@ -40,14 +32,7 @@
                     </a>. All Rights Reserved.
                 </p>
             </div>
-            <div class="col-md-5 col-lg-4">
-                <div class="text-center text-md-end">
-                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="bi bi-tiktok"></i></a>
-                </div>
-            </div>
+            <div class="col-md-5 col-lg-4"></div>
         </div>
     </div>
 </footer>

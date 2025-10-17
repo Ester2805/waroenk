@@ -10,38 +10,46 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController; // 
 use App\Models\Order;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\ShippingOptionController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 
 Route::middleware(['web'])->group(function () {
 
     // ---------------- Landing Page ----------------
-    Route::get('/', function() {
-        if (auth()->check() && auth()->user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
-        return view('landing');
-    })->name('landing');
+    Route::get('/', [HomeController::class, 'landing'])->name('landing');
+    Route::get('/home', [HomeController::class, 'catalog'])->name('home');
+    Route::view('/about', 'about')->name('about');
 
     // ---------------- Produk ----------------
     Route::prefix('products')->name('products.')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/{product}', [ProductController::class, 'show'])->name('show');
     });
 
     // ---------------- Keranjang ----------------
     Route::prefix('cart')->name('cart.')->group(function () {
-        Route::get('/', [CartController::class, 'index'])->name('index');
-        Route::post('/add/{id}', [CartController::class, 'add'])->name('add');
-        Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
-        Route::patch('/update/{id}', [CartController::class, 'update'])->name('update');
+        Route::get('/', [CartController::class, 'index'])->middleware('auth')->name('index');
+        Route::post('/add/{id}', [CartController::class, 'add'])->middleware('auth')->name('add');
+        Route::delete('/remove/{id}', [CartController::class, 'remove'])->middleware('auth')->name('remove');
+        Route::patch('/update/{id}', [CartController::class, 'update'])->middleware('auth')->name('update');
         
-        Route::get('/checkout', [CartController::class, 'showCheckout'])->name('checkout.show');
-        Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+        Route::get('/checkout', [CartController::class, 'showCheckout'])->middleware('auth')->name('checkout.show');
+        Route::post('/checkout', [CartController::class, 'checkout'])->middleware('auth')->name('checkout');
     });
 
     // ---------------- Riwayat Pesanan ----------------
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/{id}', [OrderController::class, 'show'])->name('show');
-    });
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [OrderController::class, 'index'])->name('index');
+            Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+            Route::post('/{order}/items/{item}/rate', [OrderController::class, 'rateItem'])->name('items.rate');
+        });
 
     // ---------------- Search ----------------
     Route::get('/search', [SearchController::class, 'index'])->name('search');
@@ -64,13 +72,20 @@ Route::middleware(['web'])->group(function () {
             return redirect()->route('landing');
         })->name('logout');
 
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
         // Admin routes (hanya untuk admin)
         Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-            // Product management
-            Route::get('/products/create', [\App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
-            Route::post('/products', [\App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
-            
+            Route::resource('products', AdminProductController::class)->except(['show']);
+            Route::resource('categories', AdminCategoryController::class)->except(['show']);
+            Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+            Route::get('sales', [SalesController::class, 'index'])->name('sales.index');
+            Route::patch('sales/{order}', [SalesController::class, 'update'])->name('sales.update');
+            Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
+            Route::resource('users', AdminUserController::class)->only(['index', 'update']);
+            Route::resource('shipping-options', ShippingOptionController::class)->except(['show']);
         });
     });
 });

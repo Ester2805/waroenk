@@ -15,10 +15,18 @@ class OrderItem extends Model
         'qty',
         'price',
         'subtotal',
+        'rating',
+        'review',
+        'rated_at',
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

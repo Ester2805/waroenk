@@ -16,7 +16,13 @@
         @forelse($products as $product)
             <div class="col-md-3 mb-4">
                 <div class="card h-100">
-                    <img src="{{ asset('images/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
+                    @if($product->image_url)
+                        <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
+                    @else
+                        <div class="d-flex justify-content-center align-items-center bg-light" style="height: 180px;">
+                            <span class="text-muted small">Tidak ada gambar</span>
+                        </div>
+                    @endif
                     <div class="card-body">
                         <h6>{{ $product->name }}</h6>
                         <p>Rp {{ number_format($product->price, 0, ',', '.') }}</p>
