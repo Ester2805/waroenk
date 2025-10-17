@@ -6,23 +6,31 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('categories')) {
+            Schema::create('categories', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
 
-        // Tambahkan kolom category_id ke tabel products
-        Schema::table('products', function (Blueprint $table) {
-            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
-        });
+        if (! Schema::hasColumn('products', 'category_id')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->foreignId('category_id')
+                    ->nullable()
+                    ->constrained('categories')
+                    ->nullOnDelete();
+            });
+        }
     }
 
     public function down(): void {
-        Schema::dropIfExists('categories');
+        if (Schema::hasColumn('products', 'category_id')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('category_id');
+            });
+        }
 
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('category_id');
-        });
+        Schema::dropIfExists('categories');
     }
 };

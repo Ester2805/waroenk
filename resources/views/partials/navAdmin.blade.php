@@ -1,11 +1,4 @@
 
-<!doctype html>
-<html lang="en">
-<head> 
-  <title>Welcome To Admin Dashboard</title>
-</head>
-<body class="bg-gray-100">
-
     <!-- start navbar -->
     <div class="px-6 md:fixed md:w-full md:top-0 md:z-30 flex flex-row flex-wrap items-center bg-white p-4 border-b border-gray-200 shadow-md">
 
@@ -18,9 +11,12 @@
         <!-- right -->
         <div class="hidden md:flex flex-1 justify-end items-center">
             <span class="mr-4">Halo, Admin Waroenk</span>
-            <button class="border border-primary-500 text-primary-500 hover:bg-primary-50 px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                Logout
-            </button>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="border border-primary-500 text-primary-500 hover:bg-primary-50 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                    Logout
+                </button>
+            </form>
         </div>
         <!-- end right -->
 
@@ -33,45 +29,52 @@
         <nav class="flex-1 overflow-y-auto">
         <p class="uppercase text-xs text-black mb-4 tracking-wider">Dashboard</p>
 
-            <a href="{{ route('admin.dashboard') }}" class="mb-3 flex items-center capitalize font-medium text-sm text-primary-500 hover:text-primary-600 transition bg-primary-50 rounded-lg px-2">
+            <a href="{{ route('admin.dashboard') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.dashboard') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
                 <i class="fad fa-chart-pie text-xs mr-2"></i>
-                Analytics dashboard
+                Ikhtisar
             </a>
 
-            <a href="#" class="mb-3 flex items-center capitalize font-medium text-sm text-black hover:text-primary-600 transition">
+            <a href="{{ route('admin.analytics.index') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.analytics.*') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
+                <i class="fad fa-chart-line text-xs mr-2"></i>
+                Analytics
+            </a>
+
+            <a href="{{ route('admin.sales.index') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.sales.*') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
                 <i class="fad fa-shopping-cart text-xs mr-2"></i>
                 Penjualan
             </a>
 
-            <a href="#" class="mb-3 flex items-center capitalize font-medium text-sm text-black hover:text-primary-600 transition">
+            <a href="{{ route('admin.reports.index') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.reports.*') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
                 <i class="fad fa-file-alt text-xs mr-2"></i>
                 Laporan
             </a>
 
-            <a href="#" class="mb-3 flex items-center capitalize font-medium text-sm text-black hover:text-primary-600 transition">
+            <a href="{{ route('admin.users.index') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.users.*') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
                 <i class="fad fa-users text-xs mr-2"></i>
                 Pengguna
             </a>
 
         <p class="uppercase text-xs text-black mb-4 mt-6 tracking-wider">Manajemen</p>
 
-            <a href="#" class="mb-3 flex items-center capitalize font-medium text-sm text-black hover:text-primary-600 transition">
+            <a href="{{ route('admin.products.index') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.products.index') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
                 <i class="fad fa-box text-xs mr-2"></i>
                 Produk
             </a>
 
-            <a href="/products/create" class="mb-3 flex items-center capitalize font-medium text-sm text-black hover:text-primary-600 transition">
+            <a href="{{ route('admin.products.create') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.products.create') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
                 <i class="fad fa-cog text-xs mr-2"></i>
                 Tambah Produk
             </a>
 
-            <a href="#" class="mb-3 flex items-center capitalize font-medium text-sm text-black hover:text-primary-600 transition">
-                <i class="fad fa-question-circle text-xs mr-2"></i>
-                Bantuan
+            <a href="{{ route('admin.categories.index') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.categories.*') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
+                <i class="fad fa-tags text-xs mr-2"></i>
+                Kategori
+            </a>
+
+            <a href="{{ route('admin.shipping-options.index') }}" class="mb-3 flex items-center capitalize font-medium text-sm transition px-2 rounded-lg {{ request()->routeIs('admin.shipping-options.*') ? 'text-primary-600 bg-primary-50' : 'text-black hover:text-primary-600' }}">
+                <i class="fad fa-shipping-fast text-xs mr-2"></i>
+                Opsi Pengiriman
             </a>
         </nav>
 
     </aside>
-
-</body>
-</html>

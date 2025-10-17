@@ -93,7 +93,7 @@
                 @csrf
 
                 <div class="mb-3">
-                    <input type="text" name="nama" class="form-control" placeholder="nama" required value="{{ old('name') }}">
+                    <input type="text" name="name" class="form-control" placeholder="Nama lengkap" required value="{{ old('name') }}">
                 </div>
 
                 <div class="mb-3">
@@ -101,11 +101,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" name="kata sandi" class="form-control" placeholder="kata sandi" required>
+                    <input type="password" name="password" class="form-control" placeholder="Kata sandi" required>
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" name="konfirmasi_kata sandi" class="form-control" placeholder="konfirmasi kata sandi" required>
+                    <input type="password" name="password_confirmation" class="form-control" placeholder="Konfirmasi kata sandi" required>
                 </div>
 
                 <button type="submit" class="btn-waroenk">Daftar</button>

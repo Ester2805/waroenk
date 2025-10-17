@@ -15,6 +15,7 @@
         body {
             font-family: 'Inter', sans-serif;
             padding-top: 90px;
+            background-color: #f8fafc;
         }
         .navbar-waroenk {
             background-color: #f9fafb;
@@ -52,12 +53,22 @@
             text-decoration: none;
         }
         .btn-signup:hover { background-color: #e8f5e9; }
+        .admin-main {
+            padding: 24px 24px 48px;
+            min-height: calc(100vh - 90px);
+            transition: padding-left .2s ease;
+        }
+        @media (min-width: 768px) {
+            .admin-main {
+                padding-left: 18rem;
+            }
+        }
     </style>
 </head>
 <body>
     @include('partials.navAdmin')
 
-    <main class="ml-6">
+    <main class="admin-main">
         @yield('content')
     </main>
 

@@ -60,7 +60,7 @@
 
     @include('partials.navbar')
 
-    <main class="m-0 md:pl-64">
+    <main class="m-0">
         @yield('content')
     </main>
 

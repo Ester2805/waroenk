@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -14,9 +16,10 @@ class Product extends Model
         'name',
         'price',
         'description',
-        'image',
+        'image_path',
         'stock',
         'category_id',
+        'is_active',
     ];
 
     /**
@@ -35,5 +38,29 @@ class Product extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function shippingOptions()
+    {
+        return $this->belongsToMany(ShippingOption::class)->withTimestamps();
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->image_path) {
+            return null;
+        }
+
+        if (Str::startsWith($this->image_path, ['http://', 'https://'])) {
+            return $this->image_path;
+        }
+
+        $relativePath = ltrim($this->image_path, '/');
+
+        if (File::exists(public_path($relativePath))) {
+            return asset($relativePath);
+        }
+
+        return asset('storage/' . $relativePath);
     }
 }

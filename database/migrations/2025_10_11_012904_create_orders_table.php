@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('payment_method')->default('COD');
             $table->decimal('shipping_cost', 12, 2)->default(0);
             $table->decimal('total', 12, 2)->default(0);
-            $table->string('status')->default('pending'); // pending, paid, shipped, completed, cancelled
+            $table->string('status')->default('pending'); // pending, diproses, dikirim, completed, belum bayar
 
             $table->timestamps();
         });
