@@ -12,10 +12,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with('items.product')
-            ->where(function ($query) {
-                $query->where('user_id', auth()->id())
-                    ->orWhereNull('user_id');
-            })
+            ->where('user_id', auth()->id())
             ->latest()
             ->get();
         return view('orders.index', compact('orders'));

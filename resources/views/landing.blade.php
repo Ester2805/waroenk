@@ -309,10 +309,17 @@
                     <h1 class="display-5 fw-bold mt-3 mb-3">Belanja Produk Lokal dengan Rasa Percaya</h1>
                     <p class="lead mb-4">Temukan kreasi terbaik dari pengusaha rumahan hingga UMKM terkurasi. Kami bantu kamu belanja sambil berdampak untuk komunitas.</p>
                     <div class="d-flex flex-wrap gap-3">
-                        <a href="{{ route('products.index') }}" class="hero-btn-primary">
-                            Jelajahi Produk
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
+                        @auth
+                            <a href="{{ route('products.index') }}" class="hero-btn-primary">
+                                Jelajahi Produk
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="hero-btn-primary">
+                                Jelajahi Produk
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+                        @endauth
                         <a href="{{ route('about') }}" class="hero-btn-outline">
                             Kenali Waroenk
                         </a>
@@ -384,12 +391,20 @@
                 <h2 class="fw-bold mb-1">Kategori Teratas</h2>
                 <p class="text-muted mb-0">Jelajahi kategori favorit dan temukan produk yang lagi hits.</p>
             </div>
-            <a href="{{ route('products.index') }}" class="btn btn-outline-success px-4">Lihat Semua Produk</a>
+            <a
+                href="{{ auth()->check() ? route('products.index') : route('login') }}"
+                class="btn btn-outline-success px-4"
+            >
+                Lihat Semua Produk
+            </a>
         </div>
         @if($categories->isNotEmpty())
             <div class="category-strip">
                 @foreach($categories->take(10) as $category)
-                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="category-chip">
+                    <a
+                        href="{{ auth()->check() ? route('products.index', ['category' => $category->id]) : route('login') }}"
+                        class="category-chip"
+                    >
                         <span>{{ $category->name }}</span>
                         <i class="bi bi-arrow-up-right"></i>
                     </a>

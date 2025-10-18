@@ -82,13 +82,19 @@
     <div class="py-10 px-6">
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-2xl font-bold text-slate-900">Kategori Teratas</h2>
-            <a href="{{ route('products.index') }}" class="bg-white border border-green-500 text-green-600 px-4 py-2 rounded-lg font-semibold hover:bg-green-50">
+            <a
+                href="{{ auth()->check() ? route('products.index') : route('login') }}"
+                class="bg-white border border-green-500 text-green-600 px-4 py-2 rounded-lg font-semibold hover:bg-green-50"
+            >
                 Lihat Semua Produk
             </a>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             @forelse($categories->take(6) as $category)
-                <a href="{{ route('products.index', ['category' => $category->id]) }}" class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md block text-center">
+                <a
+                    href="{{ auth()->check() ? route('products.index', ['category' => $category->id]) : route('login') }}"
+                    class="bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md block text-center"
+                >
                     <div class="aspect-square rounded-full overflow-hidden mx-auto bg-white flex items-center justify-center">
                         <span class="text-green-600 font-semibold text-lg">{{ strtoupper(substr($category->name, 0, 1)) }}</span>
                     </div>
