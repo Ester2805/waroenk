@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ShippingOption;
 
 class CartController extends Controller
 {
@@ -98,10 +99,17 @@ class CartController extends Controller
             $total += $cart[$id]['subtotal'];
         }
 
-        $shipping_cost = 10000; // contoh ongkir default Rp10.000
-        $grand_total = $total + $shipping_cost;
+        $shippingOptions = ShippingOption::where('is_active', true)->orderBy('name')->get();
+        $selectedShippingOption = old('shipping_option');
+        $shipping_cost = 0;
+        $grand_total = $total;
 
-        return view('cart.checkout', compact('cart', 'total', 'shipping_cost', 'grand_total'));
+        if ($selectedOption = $shippingOptions->firstWhere('id', $selectedShippingOption)) {
+            $shipping_cost = (float) $selectedOption->additional_cost;
+            $grand_total = $total + $shipping_cost;
+        }
+
+        return view('cart.checkout', compact('cart', 'total', 'shipping_cost', 'grand_total', 'shippingOptions', 'selectedShippingOption'));
     }
 
     // Simpan pesanan ke database
@@ -127,11 +135,13 @@ class CartController extends Controller
             'address' => 'required|string|max:255',
             'delivery_note' => 'nullable|string|max:255',
             'payment_method' => 'required|in:COD,Transfer Bank',
-            'shipping_cost' => 'required|numeric|min:0',
+            'shipping_option' => 'required|exists:shipping_options,id',
         ]);
 
         $total = collect($cart)->reduce(fn($sum, $item) => $sum + ($item['price'] * $item['quantity']), 0);
-        $grand_total = $total + $validated['shipping_cost'];
+        $shippingOption = ShippingOption::find($validated['shipping_option']);
+        $shipping_cost = $shippingOption?->additional_cost ?? 0;
+        $grand_total = $total + $shipping_cost;
 
         $virtualAccount = null;
         $status = 'pending';
@@ -150,10 +160,10 @@ class CartController extends Controller
             'delivery_note' => $validated['delivery_note'] ?? null,
             'payment_method' => $validated['payment_method'],
             'virtual_account' => $virtualAccount,
-            'shipping_cost' => $validated['shipping_cost'],
+            'shipping_cost' => $shipping_cost,
             'total' => $grand_total,
             'status' => $status,
-        ]);
+            ]);
 
         // Simpan item ke order_items
         foreach ($cart as $productId => $item) {

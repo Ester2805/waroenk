@@ -491,10 +491,7 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="cart-item-extra">
-                                <span>Voucher toko tersedia untuk pembelian ini.</span>
-                                <a href="{{ route('landing') }}">Pilih Voucher</a>
-                            </div>
+                            
                         </div>
                     </div>
                 @endforeach
@@ -511,12 +508,6 @@
             </div>
 
             <aside class="summary-card">
-                <div>
-                    <h4>Voucher Waroenk</h4>
-                    <p>Gunakan kode promo atau cek promo terbaru untuk hemat lebih banyak.</p>
-                    <a href="{{ route('landing') }}" class="summary-link">Lihat Promo</a>
-                </div>
-                <div class="summary-divider"></div>
                 <div class="summary-row">
                     <span>Total ({{ count($items) }} produk)</span>
                     <span id="selected-total">Rp0</span>

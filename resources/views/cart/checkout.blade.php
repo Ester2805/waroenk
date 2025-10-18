@@ -187,6 +187,12 @@
             grid-template-columns: 1fr;
         }
     }
+
+    select[name="shipping_option"] {
+        border-radius: 12px;
+        padding: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+    }
 </style>
 
 <div class="checkout-container">
@@ -260,10 +266,17 @@
                 </div>
 
                 <div class="checkout-section">
-                    <h3>Ongkos Kirim</h3>
+                    <h3>Opsi Pengiriman</h3>
                     <div class="checkout-form-group">
-                        <label for="shipping_cost">Masukkan Biaya Ongkir (Rp)</label>
-                        <input type="number" id="shipping_cost" name="shipping_cost" value="{{ old('shipping_cost', $shipping_cost) }}" min="0" required>
+                        <label for="shipping_option">Pilih layanan pengiriman</label>
+                        <select id="shipping_option" name="shipping_option" required>
+                            <option value="">Pilih opsi pengiriman</option>
+                            @foreach($shippingOptions as $option)
+                                <option value="{{ $option->id }}" data-cost="{{ $option->additional_cost }}" {{ (old('shipping_option', $selectedShippingOption) == $option->id) ? 'selected' : '' }}>
+                                    {{ $option->name }} @if($option->estimated_time) ({{ $option->estimated_time }}) @endif - Rp{{ number_format($option->additional_cost, 0, ',', '.') }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -292,8 +305,8 @@
                         <span>Rp{{ number_format($total, 0, ',', '.') }}</span>
                     </div>
                     <div class="summary-row">
-                        <span>Ongkir (input)</span>
-                        <span>Rp<span id="display-shipping">{{ number_format(old('shipping_cost', $shipping_cost), 0, ',', '.') }}</span></span>
+                        <span>Ongkir</span>
+                        <span>Rp<span id="display-shipping">{{ number_format($shipping_cost, 0, ',', '.') }}</span></span>
                     </div>
                     <div class="summary-total">
                         <span>Total Bayar</span>
@@ -317,18 +330,23 @@
         });
     });
 
-    const shippingInput = document.getElementById('shipping_cost');
+    const shippingSelect = document.getElementById('shipping_option');
     const displayShipping = document.getElementById('display-shipping');
     const displayTotal = document.getElementById('display-total');
     const baseTotal = {{ $total }};
 
-    if (shippingInput) {
-        shippingInput.addEventListener('input', function() {
-            const shipping = parseFloat(this.value || 0);
-            const formatRupiah = value => new Intl.NumberFormat('id-ID').format(Math.max(0, value));
+    if (shippingSelect) {
+        const formatRupiah = value => new Intl.NumberFormat('id-ID').format(Math.max(0, value));
+
+        function updateShipping() {
+            const selectedOption = shippingSelect.options[shippingSelect.selectedIndex];
+            const shipping = parseFloat(selectedOption.dataset.cost || 0);
             displayShipping.textContent = formatRupiah(shipping);
             displayTotal.textContent = formatRupiah(baseTotal + Math.max(0, shipping));
-        });
+        }
+
+        shippingSelect.addEventListener('change', updateShipping);
+        updateShipping();
     }
 </script>
 @endsection
