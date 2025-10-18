@@ -269,8 +269,7 @@
     <div class="admin-shell">
         <aside class="admin-sidebar">
             <a href="{{ route('landing') }}" class="brand">
-                <img src="{{ asset('images/logo.png') }}" alt="Waroenk">
-                <span>Waroenk</span>
+                <img src="{{ asset('images/logo-putih.png') }}" alt="Waroenk">
             </a>
 
             <nav>
