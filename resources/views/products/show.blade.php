@@ -22,15 +22,24 @@
                     <span class="badge bg-success-subtle text-success-emphasis mb-3">{{ $product->category->name ?? 'Tanpa Kategori' }}</span>
                     <h1 class="h3 fw-bold">{{ $product->name }}</h1>
                     <p class="text-success fw-semibold fs-4 mb-2">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                    <div class="d-flex align-items-center gap-3 text-muted mb-3">
-                        @php $avgRating = round($product->rating_avg ?? 0, 1); @endphp
+                    <div class="d-flex align-items-center flex-wrap gap-3 text-muted mb-3">
+                        @php
+                            $avgRating = round($product->rating_avg ?? 0, 1);
+                            $reviewCount = $reviews->count();
+                        @endphp
                         <span class="text-warning">
                             @for($star = 1; $star <= 5; $star++)
                                 {!! $star <= round($avgRating) ? '&#9733;' : '&#9734;' !!}
                             @endfor
                         </span>
                         <span>{{ $avgRating ?: '-' }} / 5</span>
-                        <span>&bull;</span>
+                        @if($reviewCount)
+                            <span>&bull;</span>
+                            <span>{{ $reviewCount }} ulasan</span>
+                            <span>&bull;</span>
+                        @else
+                            <span>&bull;</span>
+                        @endif
                         <span>Terjual {{ number_format($product->sold_total ?? 0) }}</span>
                     </div>
                     <p class="text-muted">{{ $product->description ?: 'Belum ada deskripsi untuk produk ini.' }}</p>
@@ -61,6 +70,45 @@
                     @endunless
                 </div>
             </div>
+        </div>
+
+        <div class="mt-5">
+            <h3 class="fw-semibold mb-3">Ulasan Pelanggan</h3>
+            @forelse($reviews as $review)
+                <div class="bg-white shadow-sm rounded-4 p-4 mb-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="fw-semibold mb-1">{{ optional($review->order)->customer_name ?: 'Pelanggan Waroenk' }}</h6>
+                            @if($review->rating)
+                                <div class="text-warning mb-2">
+                                    @for ($star = 1; $star <= 5; $star++)
+                                        {!! $star <= $review->rating ? '&#9733;' : '&#9734;' !!}
+                                    @endfor
+                                    <small class="text-muted ms-2">{{ $review->rating }}/5</small>
+                                </div>
+                            @endif
+                            @if($review->review)
+                                <p class="text-muted mb-0">{{ $review->review }}</p>
+                            @else
+                                <p class="text-muted fst-italic mb-0">Pelanggan ini hanya memberikan rating.</p>
+                            @endif
+                        </div>
+                        @php
+                            $rawTimestamp = $review->rated_at ?? $review->updated_at ?? $review->created_at;
+                            $reviewedAt = $rawTimestamp instanceof \Illuminate\Support\Carbon
+                                ? $rawTimestamp
+                                : ($rawTimestamp ? \Illuminate\Support\Carbon::parse($rawTimestamp) : null);
+                        @endphp
+                        @if($reviewedAt)
+                            <small class="text-muted">{{ $reviewedAt->format('d M Y') }}</small>
+                        @endif
+                    </div>
+                </div>
+            @empty
+                <div class="bg-white shadow-sm rounded-4 p-4 text-muted">
+                    Belum ada ulasan untuk produk ini. Jadilah yang pertama memberikan ulasan setelah pesananmu selesai.
+                </div>
+            @endforelse
         </div>
 
         @if($relatedProducts->isNotEmpty())

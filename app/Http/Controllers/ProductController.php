@@ -101,6 +101,17 @@ class ProductController extends Controller
                     ->whereHas('order', fn($query) => $query->where('status', 'completed'));
             }], 'rating');
 
+        $reviews = $product->orderItems()
+            ->with('order:id,customer_name')
+            ->where(function ($query) {
+                $query->whereNotNull('review')
+                    ->orWhereNotNull('rating');
+            })
+            ->whereHas('order', fn($query) => $query->where('status', 'completed'))
+            ->orderByDesc('rated_at')
+            ->orderByDesc('updated_at')
+            ->get();
+
         $relatedProducts = Product::with('category')
             ->where('is_active', true)
             ->where('id', '!=', $product->id)
@@ -109,6 +120,6 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        return view('products.show', compact('product', 'relatedProducts'));
+        return view('products.show', compact('product', 'relatedProducts', 'reviews'));
     }
 }

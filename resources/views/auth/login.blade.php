@@ -133,7 +133,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Masuk</button>
-                <p class="auth-extra">Masuk sebagai admin? gunakan email `admin@example.com` dan password `111111`.</p>
+                <p class="auth-extra">Butuh bantuan masuk? Hubungi tim dukungan kami di support@waroenk.id.</p>
             </form>
         </div>
     </div>

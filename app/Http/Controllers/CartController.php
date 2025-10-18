@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ShippingOption;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -143,6 +144,22 @@ class CartController extends Controller
         $shipping_cost = $shippingOption?->additional_cost ?? 0;
         $grand_total = $total + $shipping_cost;
 
+        $productIds = array_keys($cart);
+        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        foreach ($cart as $productId => $item) {
+            $product = $products->get($productId);
+
+            if (! $product) {
+                return redirect()->route('cart.index')->with('error', 'Produk tidak ditemukan atau sudah tidak tersedia.');
+            }
+
+            if ($product->stock < $item['quantity']) {
+                $message = "Stok {$product->name} hanya tersisa {$product->stock}. Sesuaikan jumlah sebelum melanjutkan checkout.";
+                return redirect()->route('cart.index')->with('error', $message);
+            }
+        }
+
         $virtualAccount = null;
         $status = 'pending';
 
@@ -151,30 +168,43 @@ class CartController extends Controller
             $virtualAccount = $this->generateVirtualAccount();
         }
 
-        // Simpan order
-        $order = Order::create([
-            'user_id' => auth()->id() ?? null,
-            'customer_name' => $validated['customer_name'],
-            'phone' => $validated['phone'],
-            'address' => $validated['address'],
-            'delivery_note' => $validated['delivery_note'] ?? null,
-            'payment_method' => $validated['payment_method'],
-            'virtual_account' => $virtualAccount,
-            'shipping_cost' => $shipping_cost,
-            'total' => $grand_total,
-            'status' => $status,
+        $order = DB::transaction(function () use (
+            $validated,
+            $shipping_cost,
+            $grand_total,
+            $virtualAccount,
+            $status,
+            $cart,
+            $products
+        ) {
+            $order = Order::create([
+                'user_id' => auth()->id() ?? null,
+                'customer_name' => $validated['customer_name'],
+                'phone' => $validated['phone'],
+                'address' => $validated['address'],
+                'delivery_note' => $validated['delivery_note'] ?? null,
+                'payment_method' => $validated['payment_method'],
+                'virtual_account' => $virtualAccount,
+                'shipping_cost' => $shipping_cost,
+                'total' => $grand_total,
+                'status' => $status,
             ]);
 
-        // Simpan item ke order_items
-        foreach ($cart as $productId => $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $productId,
-                'price' => $item['price'],
-                'qty' => $item['quantity'],
-                'subtotal' => $item['price'] * $item['quantity'],
-            ]);
-        }
+            foreach ($cart as $productId => $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $productId,
+                    'price' => $item['price'],
+                    'qty' => $item['quantity'],
+                    'subtotal' => $item['price'] * $item['quantity'],
+                ]);
+
+                $product = $products->get($productId);
+                $product->decrement('stock', $item['quantity']);
+            }
+
+            return $order;
+        });
 
         $remainingCart = array_diff_key($sessionCart, $cart);
         session()->put($this->getCartSessionKey(), $remainingCart);

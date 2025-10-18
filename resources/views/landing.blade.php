@@ -179,6 +179,20 @@
         box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
     }
 
+    .hero-logo-wrap {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        text-align: right;
+        padding-right: 32px;
+    }
+
+    .hero-logo {
+        max-height: 520px;
+        width: 100%;
+        max-width: 520px;
+    }
+
     .product-card-img-wrap {
         position: relative;
         background: #f1f5f9;
@@ -257,6 +271,17 @@
         .hero-stats {
             gap: 12px;
         }
+
+        .hero-logo-wrap {
+            justify-content: center;
+            margin-top: 24px;
+            padding-right: 0;
+        }
+
+        .hero-logo {
+            max-height: 320px;
+            max-width: 320px;
+        }
     }
 
     @media (max-width: 576px) {
@@ -307,8 +332,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 text-center">
-                    <img src="{{ asset('images/hero-illustration.png') }}" class="img-fluid" alt="Waroenk Hero" style="max-height:360px;">
+                <div class="col-lg-6 hero-logo-wrap">
+                    <img src="{{ asset('images/logo-putih.png') }}" class="hero-logo" alt="Logo Waroenk">
                 </div>
             </div>
         </div>

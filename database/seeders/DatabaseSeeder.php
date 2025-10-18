@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             ShippingOptionSeeder::class,
             UserSeeder::class,
+            OrderSeeder::class,
         ]);
         User::updateOrCreate(
             ['email' => 'test@example.com'],
