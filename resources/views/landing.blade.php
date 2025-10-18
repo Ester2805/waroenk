@@ -423,12 +423,18 @@
                         </a>
                         <div class="px-4 pb-4">
                             @auth
-                                <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-cart w-100">
-                                        <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
-                                    </button>
-                                </form>
+                                @if (!auth()->user()->isAdmin())
+                                    <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-cart w-100">
+                                            <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
+                                        </button>
+                                    </form>
+                                @else
+                                    <div class="btn btn-outline-secondary disabled w-100">
+                                        <i class="bi bi-shield-lock"></i> Fitur pelanggan
+                                    </div>
+                                @endif
                             @else
                                 <a href="{{ route('login') }}" class="btn btn-success btn-cart w-100">
                                     <i class="bi bi-box-arrow-in-right"></i> Login untuk Belanja

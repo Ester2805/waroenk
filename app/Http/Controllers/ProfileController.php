@@ -12,6 +12,10 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+        if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
+            return view('profile.admin', compact('user'));
+        }
+
         return view('profile.show', compact('user'));
     }
 

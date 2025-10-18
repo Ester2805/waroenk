@@ -26,5 +26,9 @@ class AppServiceProvider extends ServiceProvider
         if (class_exists(\App\Http\Middleware\AdminMiddleware::class)) {
             Route::aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
         }
+
+        if (class_exists(\App\Http\Middleware\EnsureCustomerMiddleware::class)) {
+            Route::aliasMiddleware('customer', \App\Http\Middleware\EnsureCustomerMiddleware::class);
+        }
     }
 }

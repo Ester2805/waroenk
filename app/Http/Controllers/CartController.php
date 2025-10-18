@@ -13,7 +13,7 @@ class CartController extends Controller
     // Tampilkan isi keranjang
     public function index()
     {
-        $cart = session()->get('cart', []);
+        $cart = session()->get($this->getCartSessionKey(), []);
         return view('cart.keranjang', ['items' => $cart]);
     }
 
@@ -21,7 +21,7 @@ class CartController extends Controller
     public function add($id)
     {
         $product = Product::findOrFail($id);
-        $cart = session()->get('cart', []);
+        $cart = session()->get($this->getCartSessionKey(), []);
 
         if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
@@ -35,19 +35,19 @@ class CartController extends Controller
             ];
         }
 
-        session()->put('cart', $cart);
+        session()->put($this->getCartSessionKey(), $cart);
         return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
 
     // Update jumlah produk di keranjang
     public function update(Request $request, $id)
     {
-        $cart = session()->get('cart', []);
+        $cart = session()->get($this->getCartSessionKey(), []);
 
         if (isset($cart[$id])) {
             $quantity = max(1, (int) $request->quantity);
             $cart[$id]['quantity'] = $quantity;
-            session()->put('cart', $cart);
+            session()->put($this->getCartSessionKey(), $cart);
         }
 
         return redirect()->route('cart.index')->with('success', 'Jumlah produk berhasil diperbarui!');
@@ -56,11 +56,11 @@ class CartController extends Controller
     // Hapus produk dari keranjang
     public function remove($id)
     {
-        $cart = session()->get('cart', []);
+        $cart = session()->get($this->getCartSessionKey(), []);
 
         if (isset($cart[$id])) {
             unset($cart[$id]);
-            session()->put('cart', $cart);
+            session()->put($this->getCartSessionKey(), $cart);
         }
 
         return redirect()->route('cart.index')->with('success', 'Produk berhasil dihapus dari keranjang!');
@@ -69,7 +69,7 @@ class CartController extends Controller
     // Tampilkan halaman checkout
     public function showCheckout(Request $request)
     {
-        $cart = session()->get('cart', []);
+        $cart = session()->get($this->getCartSessionKey(), []);
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong!');
         }
@@ -91,7 +91,7 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong!');
         }
 
-        session(['checkout_selected' => array_keys($cart)]);
+        session([$this->getCheckoutSelectionKey() => array_keys($cart)]);
 
         $total = 0;
         foreach ($cart as $id => $item) {
@@ -115,8 +115,8 @@ class CartController extends Controller
     // Simpan pesanan ke database
     public function checkout(Request $request)
     {
-        $sessionCart = session()->get('cart', []);
-        $selectedIds = session()->get('checkout_selected', []);
+        $sessionCart = session()->get($this->getCartSessionKey(), []);
+        $selectedIds = session()->get($this->getCheckoutSelectionKey(), []);
 
         $cart = $sessionCart;
         if (!empty($selectedIds)) {
@@ -177,8 +177,8 @@ class CartController extends Controller
         }
 
         $remainingCart = array_diff_key($sessionCart, $cart);
-        session()->put('cart', $remainingCart);
-        session()->forget('checkout_selected');
+        session()->put($this->getCartSessionKey(), $remainingCart);
+        session()->forget($this->getCheckoutSelectionKey());
 
         $message = 'Pesanan berhasil dibuat!';
         if ($virtualAccount) {
@@ -194,5 +194,27 @@ class CartController extends Controller
         $random = str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
 
         return $prefix . $random;
+    }
+
+    private function getCartSessionKey(): string
+    {
+        $userId = auth()->id();
+
+        if ($userId) {
+            return 'cart_' . $userId;
+        }
+
+        return 'cart_guest_' . session()->getId();
+    }
+
+    private function getCheckoutSelectionKey(): string
+    {
+        $userId = auth()->id();
+
+        if ($userId) {
+            return 'checkout_selected_' . $userId;
+        }
+
+        return 'checkout_selected_guest_' . session()->getId();
     }
 }
