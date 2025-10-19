@@ -130,12 +130,18 @@
                         </span>
                         <span>Terjual {{ number_format($product->sold_total ?? 0) }}</span>
                     </div>
-                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto pt-3">
-                        @csrf
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg w-full hover:bg-green-600">
-                            Tambah ke Keranjang
-                        </button>
-                    </form>
+                    @unless(auth()->check() && auth()->user()->isAdmin())
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto pt-3">
+                            @csrf
+                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg w-full hover:bg-green-600">
+                                Tambah ke Keranjang
+                            </button>
+                        </form>
+                    @else
+                        <div class="text-center text-slate-500 text-sm mt-auto pt-3">
+                            Fitur pelanggan tidak tersedia untuk admin.
+                        </div>
+                    @endunless
                 </div>
             @empty
                 <p class="text-slate-600">Belum ada produk aktif yang dapat ditampilkan.</p>

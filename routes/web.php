@@ -34,22 +34,22 @@ Route::middleware(['web'])->group(function () {
     });
 
     // ---------------- Keranjang ----------------
-    Route::prefix('cart')->name('cart.')->group(function () {
-        Route::get('/', [CartController::class, 'index'])->middleware('auth')->name('index');
-        Route::post('/add/{id}', [CartController::class, 'add'])->middleware('auth')->name('add');
-        Route::delete('/remove/{id}', [CartController::class, 'remove'])->middleware('auth')->name('remove');
-        Route::patch('/update/{id}', [CartController::class, 'update'])->middleware('auth')->name('update');
-        
-        Route::get('/checkout', [CartController::class, 'showCheckout'])->middleware('auth')->name('checkout.show');
-        Route::post('/checkout', [CartController::class, 'checkout'])->middleware('auth')->name('checkout');
+    Route::prefix('cart')->name('cart.')->middleware(['auth', 'customer'])->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add/{id}', [CartController::class, 'add'])->name('add');
+        Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
+        Route::patch('/update/{id}', [CartController::class, 'update'])->name('update');
+
+        Route::get('/checkout', [CartController::class, 'showCheckout'])->name('checkout.show');
+        Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
     });
 
     // ---------------- Riwayat Pesanan ----------------
-        Route::prefix('orders')->name('orders.')->group(function () {
-            Route::get('/', [OrderController::class, 'index'])->name('index');
-            Route::get('/{id}', [OrderController::class, 'show'])->name('show');
-            Route::post('/{order}/items/{item}/rate', [OrderController::class, 'rateItem'])->name('items.rate');
-        });
+    Route::prefix('orders')->name('orders.')->middleware(['auth', 'customer'])->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+        Route::post('/{order}/items/{item}/rate', [OrderController::class, 'rateItem'])->name('items.rate');
+    });
 
     // ---------------- Search ----------------
     Route::get('/search', [SearchController::class, 'index'])->name('search');

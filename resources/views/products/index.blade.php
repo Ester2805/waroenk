@@ -373,12 +373,18 @@
                                     </div>
                                 </div>
                                 <div class="px-4 pb-4">
-                                    <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-cart w-100">
-                                            <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
-                                        </button>
-                                    </form>
+                                    @unless(auth()->check() && auth()->user()->isAdmin())
+                                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success btn-cart w-100">
+                                                <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
+                                            </button>
+                                        </form>
+                                    @else
+                                        <div class="btn btn-outline-secondary disabled w-100">
+                                            <i class="bi bi-shield-lock"></i> Fitur pelanggan
+                                        </div>
+                                    @endunless
                                 </div>
                             </div>
                         </div>

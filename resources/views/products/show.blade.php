@@ -49,10 +49,16 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
-                        @csrf
-                        <button class="btn btn-success btn-lg w-100" type="submit">Tambah ke Keranjang</button>
-                    </form>
+                    @unless(auth()->check() && auth()->user()->isAdmin())
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
+                            @csrf
+                            <button class="btn btn-success btn-lg w-100" type="submit">Tambah ke Keranjang</button>
+                        </form>
+                    @else
+                        <div class="alert alert-warning mt-auto mb-0">
+                            Admin tidak dapat melakukan pemesanan.
+                        </div>
+                    @endunless
                 </div>
             </div>
         </div>
