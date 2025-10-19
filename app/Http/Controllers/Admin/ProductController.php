@@ -131,7 +131,7 @@ class ProductController extends Controller
      */
     private function storeProductImage($image, string $productName): string
     {
-        $directory = public_path('images/products');
+        $directory = public_path('images/product');
 
         if (! File::isDirectory($directory)) {
             File::makeDirectory($directory, 0755, true);
@@ -142,7 +142,7 @@ class ProductController extends Controller
 
         $image->move($directory, $filename);
 
-        return 'images/products/' . $filename;
+        return 'images/product/' . $filename;
     }
 
     /**

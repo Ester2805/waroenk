@@ -109,32 +109,37 @@
     }
 
     .navbar-waroenk .btn-login {
-        color: #1f2933;
+        background: rgba(46, 125, 50, 0.9);
+        color: #fff;
         font-weight: 600;
         text-decoration: none;
         padding: 10px 18px;
         border-radius: 999px;
-        transition: color .2s ease;
+        transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
     }
 
     .navbar-waroenk .btn-login:hover {
-        color: #2e7d32;
+        background: #2e7d32;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(46, 125, 50, 0.25);
+        color: #fff;
     }
 
     .navbar-waroenk .btn-signup {
-        background: #2e7d32;
-        color: #fff;
+        border: 2px solid #2e7d32;
+        color: #2e7d32;
         padding: 10px 20px;
         border-radius: 999px;
         font-weight: 600;
         text-decoration: none;
-        transition: transform .2s ease, box-shadow .2s ease;
+        transition: transform .2s ease, box-shadow .2s ease, color .2s ease, border-color .2s ease;
     }
 
     .navbar-waroenk .btn-signup:hover {
         transform: translateY(-2px);
         box-shadow: 0 12px 24px rgba(46, 125, 50, 0.25);
-        color: #fff;
+        color: #1f2933;
+        border-color: #1f2933;
     }
 
     .navbar-waroenk .dropdown-menu {
