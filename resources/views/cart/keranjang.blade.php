@@ -501,7 +501,6 @@
                         <input type="checkbox" id="select-all-bottom"> Pilih Semua ({{ count($items) }})
                     </label>
                     <div class="cart-bulk-actions">
-                        <a href="{{ route('products.index') }}">Favorit Saya</a>
                         <a href="{{ route('landing') }}">Cari Produk Lain</a>
                     </div>
                 </div>
@@ -526,7 +525,7 @@
                 @auth
                     <a href="{{ route('products.index') }}" class="button-primary">Belanja Sekarang</a>
                 @else
-                    <a href="{{ route('login') }}" class="button-primary">Login untuk Belanja</a>
+                    <a href="{{ route('login') }}" class="button-primary">Masuk untuk Belanja</a>
                 @endauth
                 <a href="{{ route('landing') }}" class="button-outline">Kembali ke Beranda</a>
             </div>

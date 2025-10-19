@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login')
+@section('title', 'Masuk')
 
 @section('content')
 <style>
@@ -105,7 +105,7 @@
         </div>
         <div class="auth-form">
             <div>
-                <h3>Login</h3>
+                <h3>Masuk</h3>
                 <p class="auth-extra mb-0">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></p>
             </div>
 
@@ -132,7 +132,7 @@
                     <input type="password" name="password" class="form-control" placeholder="******" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Masuk</button>
                 <p class="auth-extra">Masuk sebagai admin? gunakan email `admin@example.com` dan password `111111`.</p>
             </form>
         </div>

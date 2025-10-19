@@ -225,7 +225,7 @@
 
                 @guest
                     @if (!Request::is('login') && !Request::is('register'))
-                        <a href="{{ route('login') }}" class="btn-login">Login</a>
+                        <a href="{{ route('login') }}" class="btn-login">Masuk</a>
                         <a href="{{ route('register') }}" class="btn-signup">Daftar</a>
                     @endif
                 @endguest

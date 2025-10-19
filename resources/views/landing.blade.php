@@ -437,7 +437,7 @@
                                 @endif
                             @else
                                 <a href="{{ route('login') }}" class="btn btn-success btn-cart w-100">
-                                    <i class="bi bi-box-arrow-in-right"></i> Login untuk Belanja
+                                    <i class="bi bi-box-arrow-in-right"></i> Masuk untuk Belanja
                                 </a>
                             @endauth
                         </div>

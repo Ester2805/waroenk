@@ -23,8 +23,8 @@
                     <i class="bi bi-cart" style="font-size:1.5rem;"></i>
                 </a>
 
-                <a href="/login" class="btn btn-success me-2">Login</a>
-                <a href="/register" class="btn btn-outline-success">Sign Up</a>
+                <a href="/login" class="btn btn-success me-2">Masuk</a>
+                <a href="/register" class="btn btn-outline-success">Daftar</a>
             </div>
         </div>
     </nav>
