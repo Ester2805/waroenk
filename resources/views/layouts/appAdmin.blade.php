@@ -47,13 +47,6 @@
             height: 44px;
         }
 
-        .admin-sidebar .brand span {
-            font-weight: 700;
-            font-size: 1.25rem;
-            letter-spacing: 0.4px;
-            color: #ffffff;
-        }
-
         .admin-nav-section {
             margin-top: 32px;
         }
