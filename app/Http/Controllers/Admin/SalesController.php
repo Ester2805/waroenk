@@ -18,13 +18,7 @@ class SalesController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $summary = [
-            'total_orders' => Order::count(),
-            'unpaid' => Order::where('status', 'belum bayar')->count(),
-            'pending' => Order::where('status', 'pending')->count(),
-            'completed' => Order::where('status', 'completed')->count(),
-            'revenue' => Order::where('status', 'completed')->sum('total'),
-        ];
+        $summary = $this->buildSummary();
 
         return view('admin.sales.index', compact('orders', 'summary', 'status'));
     }
@@ -39,6 +33,28 @@ class SalesController extends Controller
 
         $order->update(['status' => $data['status']]);
 
+        if ($request->expectsJson()) {
+            $order->refresh();
+
+            return response()->json([
+                'message' => 'Status pesanan #' . $order->id . ' berhasil diperbarui.',
+                'order_id' => $order->id,
+                'status' => $order->status,
+                'summary' => $this->buildSummary(),
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Status pesanan #' . $order->id . ' berhasil diperbarui.');
+    }
+
+    private function buildSummary(): array
+    {
+        return [
+            'total_orders' => Order::count(),
+            'unpaid' => Order::where('status', 'belum bayar')->count(),
+            'pending' => Order::where('status', 'pending')->count(),
+            'completed' => Order::where('status', 'completed')->count(),
+            'revenue' => Order::where('status', 'completed')->sum('total'),
+        ];
     }
 }

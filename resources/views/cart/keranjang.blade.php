@@ -473,7 +473,7 @@
                                     Rp{{ number_format($item['price'], 0, ',', '.') }}
                                 </div>
                                 <div>
-                                    <form action="{{ route('cart.update', $id) }}" method="POST" class="quantity-form">
+                                    <form action="{{ route('cart.update', $id) }}" method="POST" class="quantity-form js-cart-update-form" data-item-id="{{ $id }}">
                                         @csrf
                                         @method('PATCH')
                                         <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1">
@@ -484,7 +484,7 @@
                                     Rp{{ number_format($subtotal, 0, ',', '.') }}
                                 </div>
                                 <div class="remove-form">
-                                    <form action="{{ route('cart.remove', $id) }}" method="POST">
+                                    <form action="{{ route('cart.remove', $id) }}" method="POST" class="js-cart-remove-form" data-item-id="{{ $id }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit">Hapus</button>
@@ -537,7 +537,7 @@
     const checkoutContainer = document.getElementById('checkout-container');
 
     if (checkoutContainer) {
-        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+        const getItemCheckboxes = () => Array.from(document.querySelectorAll('.item-checkbox'));
         const selectAll = document.getElementById('select-all');
         const selectAllBottom = document.getElementById('select-all-bottom');
         const totalLabel = document.getElementById('selected-total');
@@ -548,9 +548,12 @@
         function updateSummary() {
             let total = 0;
             let selected = 0;
-            itemCheckboxes.forEach(cb => {
+            getItemCheckboxes().forEach(cb => {
                 if (cb.checked) {
                     const card = cb.closest('.store-card');
+                    if (!card) {
+                        return;
+                    }
                     const qtyInput = card.querySelector('input[name="quantity"]');
                     const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
                     const price = parseFloat(card.dataset.price);
@@ -567,8 +570,9 @@
         }
 
         function syncSelectAll() {
-            const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
-            const someChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
+            const checkboxes = getItemCheckboxes();
+            const allChecked = checkboxes.length > 0 && checkboxes.every(cb => cb.checked);
+            const someChecked = checkboxes.some(cb => cb.checked);
             if (selectAll) {
                 selectAll.checked = allChecked;
                 selectAll.indeterminate = !allChecked && someChecked;
@@ -579,7 +583,7 @@
             }
         }
 
-        itemCheckboxes.forEach(cb => {
+        getItemCheckboxes().forEach(cb => {
             cb.addEventListener('change', () => {
                 syncSelectAll();
                 updateSummary();
@@ -587,7 +591,7 @@
         });
 
         const handleSelectAll = (checked) => {
-            itemCheckboxes.forEach(cb => cb.checked = checked);
+            getItemCheckboxes().forEach(cb => cb.checked = checked);
             updateSummary();
             syncSelectAll();
         };
@@ -601,7 +605,7 @@
 
         if (checkoutButton) {
             checkoutButton.addEventListener('click', () => {
-                const selected = Array.from(itemCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+                const selected = getItemCheckboxes().filter(cb => cb.checked).map(cb => cb.value);
                 if (selected.length === 0) {
                     alert('Pilih produk yang ingin di-checkout.');
                     return;
@@ -615,6 +619,11 @@
         }
 
         updateSummary();
+        document.addEventListener('cart:refresh', () => {
+            syncSelectAll();
+            updateSummary();
+        });
+
     }
 </script>
 @endsection

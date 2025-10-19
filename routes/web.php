@@ -25,7 +25,7 @@ Route::middleware(['web'])->group(function () {
     // ---------------- Landing Page ----------------
     Route::get('/', [HomeController::class, 'landing'])->name('landing');
     Route::get('/home', [HomeController::class, 'catalog'])->name('home');
-    Route::view('/about', 'about')->name('about');
+    Route::view('/about', 'pages.about')->name('about');
 
     // ---------------- Produk ----------------
     Route::prefix('products')->name('products.')->group(function () {

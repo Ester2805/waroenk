@@ -26,6 +26,7 @@
                         @php
                             $avgRating = round($product->rating_avg ?? 0, 1);
                             $reviewCount = $reviews->count();
+                            $featuredReview = $reviews->firstWhere(fn($r) => ! empty($r->review));
                         @endphp
                         <span class="text-warning">
                             @for($star = 1; $star <= 5; $star++)
@@ -41,6 +42,20 @@
                             <span>&bull;</span>
                         @endif
                         <span>Terjual {{ number_format($product->sold_total ?? 0) }}</span>
+                    </div>
+
+                    <div class="mb-3">
+                        @if($featuredReview)
+                            <div class="bg-light rounded-3 p-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <strong>{{ optional($featuredReview->order)->customer_name ?? 'Pelanggan Waroenk' }}</strong>
+                                    <small class="text-muted">{{ optional($featuredReview->rated_at ?? $featuredReview->updated_at ?? $featuredReview->created_at)->format('d M Y') }}</small>
+                                </div>
+                                <p class="text-muted mb-0">"{{ $featuredReview->review }}"</p>
+                            </div>
+                        @else
+                            <span class="text-muted small">Belum ada ulasan tertulis untuk produk ini.</span>
+                        @endif
                     </div>
                     <p class="text-muted">{{ $product->description ?: 'Belum ada deskripsi untuk produk ini.' }}</p>
 
@@ -58,8 +73,10 @@
                         </div>
                     @endif
 
+                    <div class="d-flex flex-column gap-2 mt-auto">
+                        <div class="text-muted small">Stok tersedia: <strong>{{ number_format($product->stock) }}</strong></div>
                     @unless(auth()->check() && auth()->user()->isAdmin())
-                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto js-add-to-cart-form" data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}">
                             @csrf
                             <button class="btn btn-success btn-lg w-100" type="submit">Tambah ke Keranjang</button>
                         </form>
@@ -68,6 +85,7 @@
                             Admin tidak dapat melakukan pemesanan.
                         </div>
                     @endunless
+                    </div>
                 </div>
             </div>
         </div>

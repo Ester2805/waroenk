@@ -131,7 +131,7 @@
                         <span>Terjual {{ number_format($product->sold_total ?? 0) }}</span>
                     </div>
                     @unless(auth()->check() && auth()->user()->isAdmin())
-                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto pt-3">
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto pt-3 js-add-to-cart-form" data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}">
                             @csrf
                             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg w-full hover:bg-green-600">
                                 Tambah ke Keranjang

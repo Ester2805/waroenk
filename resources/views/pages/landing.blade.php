@@ -449,7 +449,7 @@
                         <div class="px-4 pb-4">
                             @auth
                                 @if (!auth()->user()->isAdmin())
-                                    <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="js-add-to-cart-form" data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}">
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-cart w-100">
                                             <i class="bi bi-cart-plus"></i> Tambah ke Keranjang

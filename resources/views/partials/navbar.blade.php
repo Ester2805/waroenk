@@ -215,15 +215,16 @@
             {{-- Cart & Auth --}}
             <div class="navbar-actions">
                 @if (!Request::is('login') && !Request::is('register') && (!auth()->check() || !auth()->user()->isAdmin()))
+                    @php
+                        $cartItems = auth()->check()
+                            ? session('cart_' . auth()->id(), [])
+                            : session('cart_guest_' . session()->getId(), []);
+                        $cartBadgeCount = is_array($cartItems) ? count($cartItems) : 0;
+                    @endphp
                     <a href="{{ url('/cart') }}" class="btn-cart" aria-label="Lihat keranjang">
                         <i class="bi bi-cart fs-5"></i>
-                        <span class="badge bg-danger">
-                            @php
-                                $cartItems = auth()->check()
-                                    ? session('cart_' . auth()->id(), [])
-                                    : session('cart_guest_' . session()->getId(), []);
-                            @endphp
-                            {{ is_array($cartItems) ? count($cartItems) : 0 }}
+                        <span class="badge bg-danger" id="cart-count" data-cart-count="{{ $cartBadgeCount }}">
+                            {{ $cartBadgeCount }}
                         </span>
                     </a>
                 @endif

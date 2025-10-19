@@ -68,19 +68,6 @@ class SearchController extends Controller
                 });
         }], 'rating');
 
-        $query->withSum(['orderItems as sold_total' => function ($relation) {
-            $relation->whereHas('order', function ($orderQuery) {
-                $orderQuery->where('status', 'completed');
-            });
-        }], 'qty');
-
-        $query->withAvg(['orderItems as rating_avg' => function ($relation) {
-            $relation->whereNotNull('rating')
-                ->whereHas('order', function ($orderQuery) {
-                    $orderQuery->where('status', 'completed');
-                });
-        }], 'rating');
-
         $products = match ($sort) {
             'popular' => $query->orderByDesc('sold_total')->orderByDesc('created_at')->get(),
             'price_low' => $query->orderBy('price')->get(),
@@ -88,6 +75,15 @@ class SearchController extends Controller
             'rating' => $query->orderByDesc('rating_avg')->orderByDesc('sold_total')->get(),
             default => $query->orderByDesc('created_at')->get(),
         };
+
+        if ($request->expectsJson()) {
+            $html = view('products.partials.grid', ['products' => $products])->render();
+
+            return response()->json([
+                'html' => $html,
+                'count' => $products->count(),
+            ]);
+        }
 
         $categories = Category::orderBy('name')->get();
         $shippingOptions = ShippingOption::where('is_active', true)->orderBy('name')->get();

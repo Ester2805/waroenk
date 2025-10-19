@@ -44,7 +44,13 @@ class OrderController extends Controller
         }
 
         if ($order->status !== 'completed') {
-            return redirect()->route('orders.show', $order->id)->with('error', 'Pesanan belum selesai, rating belum bisa diberikan.');
+            $message = 'Pesanan belum selesai, rating belum bisa diberikan.';
+
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $message], 422);
+            }
+
+            return redirect()->route('orders.show', $order->id)->with('error', $message);
         }
 
         $validated = $request->validate([
@@ -57,6 +63,18 @@ class OrderController extends Controller
             'review' => $validated['review'] ?? null,
             'rated_at' => now(),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Terima kasih, rating berhasil disimpan.',
+                'item' => [
+                    'id' => $item->id,
+                    'rating' => $item->rating,
+                    'review' => $item->review,
+                    'rated_at' => optional($item->rated_at)->format('d M Y'),
+                ],
+            ]);
+        }
 
         return redirect()->route('orders.show', $order->id)->with('success', 'Terima kasih, rating berhasil disimpan.');
     }

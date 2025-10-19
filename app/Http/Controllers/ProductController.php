@@ -74,6 +74,15 @@ class ProductController extends Controller
             default => $query->orderByDesc('created_at')->get(),
         };
 
+        if ($request->expectsJson()) {
+            $html = view('products.partials.grid', ['products' => $products])->render();
+
+            return response()->json([
+                'html' => $html,
+                'count' => $products->count(),
+            ]);
+        }
+
         $shippingOptions = ShippingOption::where('is_active', true)->orderBy('name')->get();
 
         $filters = [

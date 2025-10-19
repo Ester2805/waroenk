@@ -84,7 +84,7 @@
                                     <div class="text-muted small">Diberi rating {{ $item->rating }}/5</div>
                                 </div>
                             @elseif($order->status === 'completed')
-                                <form class="rating-form" method="POST" action="{{ route('orders.items.rate', [$order->id, $item->id]) }}">
+                                <form class="rating-form js-rating-form" method="POST" action="{{ route('orders.items.rate', [$order->id, $item->id]) }}" data-item-id="{{ $item->id }}">
                                     @csrf
                                     <div class="mb-2">
                                         <label class="form-label">Beri rating produk ini</label>

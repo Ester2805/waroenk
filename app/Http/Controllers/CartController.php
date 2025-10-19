@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ShippingOption;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CartController extends Controller
 {
@@ -19,7 +20,7 @@ class CartController extends Controller
     }
 
     // Tambah produk ke keranjang
-    public function add($id)
+    public function add(Request $request, $id)
     {
         $product = Product::findOrFail($id);
         $cart = session()->get($this->getCartSessionKey(), []);
@@ -27,16 +28,33 @@ class CartController extends Controller
         if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
             $cart[$id]['image'] = $product->image_url ?? $cart[$id]['image'];
+            $cart[$id]['price'] = $product->price;
+            $cart[$id]['stock'] = $product->stock;
         } else {
             $cart[$id] = [
                 "name" => $product->name,
                 "price" => $product->price,
                 "quantity" => 1,
                 "image" => $product->image_url ?? null,
+                "stock" => $product->stock,
             ];
         }
 
         session()->put($this->getCartSessionKey(), $cart);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Produk berhasil ditambahkan ke keranjang!',
+                'summary' => $this->buildCartSummary($cart),
+                'item' => [
+                    'id' => $id,
+                    'name' => $cart[$id]['name'],
+                    'quantity' => $cart[$id]['quantity'],
+                    'price' => $cart[$id]['price'],
+                ],
+            ]);
+        }
+
         return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
 
@@ -48,20 +66,48 @@ class CartController extends Controller
         if (isset($cart[$id])) {
             $quantity = max(1, (int) $request->quantity);
             $cart[$id]['quantity'] = $quantity;
+
+            if ($product = Product::find($id)) {
+                $cart[$id]['stock'] = $product->stock;
+                $cart[$id]['price'] = $product->price;
+                $cart[$id]['image'] = $product->image_url ?? $cart[$id]['image'];
+            }
+
             session()->put($this->getCartSessionKey(), $cart);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Jumlah produk berhasil diperbarui!',
+                    'summary' => $this->buildCartSummary($cart),
+                    'item' => [
+                        'id' => $id,
+                        'quantity' => $cart[$id]['quantity'],
+                        'subtotal' => $cart[$id]['quantity'] * $cart[$id]['price'],
+                        'price' => $cart[$id]['price'],
+                    ],
+                ]);
+            }
         }
 
         return redirect()->route('cart.index')->with('success', 'Jumlah produk berhasil diperbarui!');
     }
 
     // Hapus produk dari keranjang
-    public function remove($id)
+    public function remove(Request $request, $id)
     {
         $cart = session()->get($this->getCartSessionKey(), []);
 
         if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put($this->getCartSessionKey(), $cart);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Produk berhasil dihapus dari keranjang!',
+                    'summary' => $this->buildCartSummary($cart),
+                    'removed_id' => $id,
+                ]);
+            }
         }
 
         return redirect()->route('cart.index')->with('success', 'Produk berhasil dihapus dari keranjang!');
@@ -70,10 +116,32 @@ class CartController extends Controller
     // Tampilkan halaman checkout
     public function showCheckout(Request $request)
     {
-        $cart = session()->get($this->getCartSessionKey(), []);
-        if (empty($cart)) {
+        $sessionKey = $this->getCartSessionKey();
+        $sessionCart = session()->get($sessionKey, []);
+
+        if (empty($sessionCart)) {
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong!');
         }
+
+        $productIds = array_keys($sessionCart);
+        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        foreach ($sessionCart as $productId => $item) {
+            $product = $products->get($productId);
+
+            if (! $product) {
+                unset($sessionCart[$productId]);
+                session()->put($sessionKey, $sessionCart);
+
+                return redirect()->route('cart.index')->with('error', 'Beberapa produk tidak ditemukan dan telah dihapus dari keranjang.');
+            }
+
+            $sessionCart[$productId]['stock'] = $product->stock;
+            $sessionCart[$productId]['price'] = $product->price;
+            $sessionCart[$productId]['image'] = $product->image_url ?? $sessionCart[$productId]['image'] ?? null;
+        }
+
+        session()->put($sessionKey, $sessionCart);
 
         $submitted = $request->boolean('submitted');
         $selected = $request->input('selected', []);
@@ -82,8 +150,9 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Pilih produk yang ingin di-checkout.');
         }
 
+        $cart = $sessionCart;
         if (!empty($selected)) {
-            $cart = array_filter($cart, function ($value, $key) use ($selected) {
+            $cart = array_filter($sessionCart, function ($value, $key) use ($selected) {
                 return in_array((string)$key, array_map('strval', $selected), true);
             }, ARRAY_FILTER_USE_BOTH);
         }
@@ -96,6 +165,12 @@ class CartController extends Controller
 
         $total = 0;
         foreach ($cart as $id => $item) {
+            $product = $products->get($id);
+
+            if ($product && $product->stock < $item['quantity']) {
+                return redirect()->route('cart.index')->with('error', "Stok {$product->name} hanya tersisa {$product->stock}. Sesuaikan jumlah sebelum melanjutkan checkout.");
+            }
+
             $cart[$id]['subtotal'] = $item['price'] * $item['quantity'];
             $total += $cart[$id]['subtotal'];
         }
@@ -144,22 +219,6 @@ class CartController extends Controller
         $shipping_cost = $shippingOption?->additional_cost ?? 0;
         $grand_total = $total + $shipping_cost;
 
-        $productIds = array_keys($cart);
-        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
-
-        foreach ($cart as $productId => $item) {
-            $product = $products->get($productId);
-
-            if (! $product) {
-                return redirect()->route('cart.index')->with('error', 'Produk tidak ditemukan atau sudah tidak tersedia.');
-            }
-
-            if ($product->stock < $item['quantity']) {
-                $message = "Stok {$product->name} hanya tersisa {$product->stock}. Sesuaikan jumlah sebelum melanjutkan checkout.";
-                return redirect()->route('cart.index')->with('error', $message);
-            }
-        }
-
         $virtualAccount = null;
         $status = 'pending';
 
@@ -168,43 +227,68 @@ class CartController extends Controller
             $virtualAccount = $this->generateVirtualAccount();
         }
 
-        $order = DB::transaction(function () use (
-            $validated,
-            $shipping_cost,
-            $grand_total,
-            $virtualAccount,
-            $status,
-            $cart,
-            $products
-        ) {
-            $order = Order::create([
-                'user_id' => auth()->id() ?? null,
-                'customer_name' => $validated['customer_name'],
-                'phone' => $validated['phone'],
-                'address' => $validated['address'],
-                'delivery_note' => $validated['delivery_note'] ?? null,
-                'payment_method' => $validated['payment_method'],
-                'virtual_account' => $virtualAccount,
-                'shipping_cost' => $shipping_cost,
-                'total' => $grand_total,
-                'status' => $status,
-            ]);
+        try {
+            $order = DB::transaction(function () use (
+                $validated,
+                $shipping_cost,
+                $grand_total,
+                $virtualAccount,
+                $status,
+                $cart
+            ) {
+                $productLocks = Product::whereIn('id', array_keys($cart))
+                    ->lockForUpdate()
+                    ->get()
+                    ->keyBy('id');
 
-            foreach ($cart as $productId => $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $productId,
-                    'price' => $item['price'],
-                    'qty' => $item['quantity'],
-                    'subtotal' => $item['price'] * $item['quantity'],
+                foreach ($cart as $productId => $item) {
+                    $product = $productLocks->get($productId);
+
+                    if (! $product) {
+                        throw ValidationException::withMessages([
+                            'cart' => 'Produk tidak ditemukan atau sudah dihapus.',
+                        ]);
+                    }
+
+                    if ($product->stock < $item['quantity']) {
+                        throw ValidationException::withMessages([
+                            'cart' => "Stok {$product->name} hanya tersisa {$product->stock}. Sesuaikan jumlah sebelum checkout.",
+                        ]);
+                    }
+                }
+
+                $order = Order::create([
+                    'user_id' => auth()->id() ?? null,
+                    'customer_name' => $validated['customer_name'],
+                    'phone' => $validated['phone'],
+                    'address' => $validated['address'],
+                    'delivery_note' => $validated['delivery_note'] ?? null,
+                    'payment_method' => $validated['payment_method'],
+                    'virtual_account' => $virtualAccount,
+                    'shipping_cost' => $shipping_cost,
+                    'total' => $grand_total,
+                    'status' => $status,
                 ]);
 
-                $product = $products->get($productId);
-                $product->decrement('stock', $item['quantity']);
-            }
+                foreach ($cart as $productId => $item) {
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $productId,
+                        'price' => $item['price'],
+                        'qty' => $item['quantity'],
+                        'subtotal' => $item['price'] * $item['quantity'],
+                    ]);
 
-            return $order;
-        });
+                    $product = $productLocks->get($productId);
+                    $product->decrement('stock', $item['quantity']);
+                }
+
+                return $order;
+            });
+        } catch (ValidationException $exception) {
+            $firstError = collect($exception->errors())->flatten()->first() ?? 'Terjadi kesalahan saat checkout.';
+            return redirect()->route('cart.index')->with('error', $firstError);
+        }
 
         $remainingCart = array_diff_key($sessionCart, $cart);
         session()->put($this->getCartSessionKey(), $remainingCart);
@@ -224,6 +308,20 @@ class CartController extends Controller
         $random = str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
 
         return $prefix . $random;
+    }
+
+    private function buildCartSummary(array $cart): array
+    {
+        $itemsCount = count($cart);
+        $totalQuantity = array_sum(array_map(fn ($item) => $item['quantity'], $cart));
+        $total = array_sum(array_map(fn ($item) => $item['price'] * $item['quantity'], $cart));
+
+        return [
+            'items_count' => $itemsCount,
+            'total_quantity' => $totalQuantity,
+            'total' => $total,
+            'formatted_total' => 'Rp ' . number_format($total, 0, ',', '.'),
+        ];
     }
 
     private function getCartSessionKey(): string

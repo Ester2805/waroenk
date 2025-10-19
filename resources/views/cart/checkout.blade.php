@@ -295,6 +295,9 @@
                         <div class="flex-grow-1">
                             <div class="fw-semibold">{{ $item['name'] }}</div>
                             <small class="text-muted">Rp{{ number_format($item['price'], 0, ',', '.') }} &middot; x{{ $item['quantity'] }}</small>
+                            @if(isset($item['stock']) && $item['stock'] < $item['quantity'])
+                                <div class="text-danger small mt-1">Stok tersisa {{ $item['stock'] }}. Kembali ke keranjang untuk sesuaikan jumlah.</div>
+                            @endif
                         </div>
                     </div>
                 @endforeach

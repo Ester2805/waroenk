@@ -32,7 +32,7 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        return view('landing', compact('categories', 'featuredProducts'));
+        return view('pages.landing', compact('categories', 'featuredProducts'));
     }
 
     public function catalog()
@@ -63,6 +63,6 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('home', compact('categories', 'featuredProducts', 'recentOrders'));
+        return view('pages.home', compact('categories', 'featuredProducts', 'recentOrders'));
     }
 }

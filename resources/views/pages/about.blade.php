@@ -75,7 +75,7 @@
                     <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg">Mulai Belanja Produk Lokal</a>
                 </div>
                 <div class="col-lg-6 text-center">
-                    <img src="{{ asset('images/about-illustration.png') }}" alt="Tentang Waroenk" class="img-fluid" style="max-height: 320px;">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Waroenk" class="img-fluid" style="max-height: 220px;">
                 </div>
             </div>
         </div>
