@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase; // Menggunakan TestCase dari Laravel agar Facade Validator berfungsi
+use Tests\TestCase;
 
 class EmailValidationTest extends TestCase
 {
@@ -13,7 +13,6 @@ class EmailValidationTest extends TestCase
      */
     public function test_email_format_validation(): void
     {
-        // Pengujian untuk email dengan format yang VALID
         $validEmails = [
             'test@example.com',
             'user.name@domain.co.id',
@@ -22,13 +21,12 @@ class EmailValidationTest extends TestCase
 
         foreach ($validEmails as $email) {
             $validator = Validator::make(['email' => $email], [
-                'email' => 'required|email'
+                'email' => 'required|email',
             ]);
-            
+
             $this->assertFalse($validator->fails(), "Email seharusnya valid: {$email}");
         }
 
-        // Pengujian untuk email dengan format yang TIDAK VALID
         $invalidEmails = [
             'plainaddress',                  // Tidak ada @ dan domain
             '#@%^%#$@#$@#.com',              // Karakter tidak valid
@@ -40,9 +38,9 @@ class EmailValidationTest extends TestCase
 
         foreach ($invalidEmails as $email) {
             $validator = Validator::make(['email' => $email], [
-                'email' => 'required|email'
+                'email' => 'required|email',
             ]);
-            
+
             $this->assertTrue($validator->fails(), "Email seharusnya tidak valid: {$email}");
         }
     }
